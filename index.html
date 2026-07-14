@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Volleyball Rebuild V5 — Isaac</title>
+<title>Volleyball Rebuild V5.2 — Isaac</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--navy:#0b1830;--blue:#285ee8;--ink:#172033;--muted:#667085;--line:#dfe5ee;--bg:#f3f6fa;--white:#fff;--green:#0f7b5d;--soft:#edf3ff;--amber:#b26a00;--red:#b42318}
@@ -139,12 +139,36 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
 .hidden-workout{display:none!important}
 @media(max-width:850px){.workout-main{grid-template-columns:1fr}.workout-side{order:-1}.prescription{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.actions{grid-template-columns:1fr}.workout-main{padding:8px}.workout-stage,.workout-side{padding:14px}}
+
+.visual-timer{
+  position:relative;width:min(300px,72vw);aspect-ratio:1;margin:18px auto;
+  display:grid;place-items:center
+}
+.visual-timer svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.visual-timer circle{fill:none;stroke-width:14}
+.visual-timer .track{stroke:rgba(255,255,255,.10)}
+.visual-timer .progress{stroke:#4f8cff;stroke-linecap:round;transition:stroke .2s ease}
+.visual-timer .timer-inner{position:relative;text-align:center;z-index:1}
+.visual-timer .timer-number{font-size:clamp(3rem,11vw,6.5rem);font-weight:900;letter-spacing:-.06em}
+.visual-timer .timer-phase{font-size:.85rem;letter-spacing:.12em;font-weight:800;color:#b9cae9}
+.visual-timer.phase-up .progress{stroke:#4f8cff}
+.visual-timer.phase-hold .progress{stroke:#f59e0b}
+.visual-timer.phase-down .progress{stroke:#22c55e}
+.visual-timer.phase-rest .progress{stroke:#94a3b8}
+.visual-timer.phase-max .progress{stroke:#ef4444}
+.visual-timer.phase-ready .progress{stroke:#38bdf8}
+.phase-chip{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.08);
+  color:#dce7ff;font-size:.8rem;font-weight:800;letter-spacing:.08em
+}
+
 </style>
 </head>
 <body>
 <div id="authScreen" class="auth-screen">
   <div class="auth-card">
-    <span class="tag" style="color:#285ee8">VOLLEYBALL REBUILD V5</span>
+    <span class="tag" style="color:#285ee8">VOLLEYBALL REBUILD V5.2</span>
     <h2>Connexion</h2>
     <p>Utilise le même compte sur tous tes appareils.</p>
     <label>Adresse e-mail<input id="authEmail" type="email" autocomplete="email"></label>
@@ -157,7 +181,7 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
 <div class="wrap">
 <section class="hero">
   <div>
-    <span class="tag">V5 • 14 JUILLET → 18 AOÛT 2026</span>
+    <span class="tag">V5.2 • 14 JUILLET → 18 AOÛT 2026</span>
     <h1>VOLLEYBALL<br>REBUILD PROJECT</h1>
     <p>Programme recalé sur ton niveau réel au 14 juillet : 91 kg, bench à 77,5 kg, remusculation unilatérale du genou gauche et reprise progressive du tirage vertical.</p>
   </div>
@@ -283,7 +307,7 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
               <td><strong>Leg extension unilatéral</strong><small>Douleur pendant ≤3/10 et retour à 1/10 ou moins à J+1.</small></td>
               <td>42 kg/jambe • 3×10</td>
               <td>2-2-2</td>
-              <td>2 min</td>
+              <td>3 min</td>
               <td>RIR 3→2</td>
               <td><input id="done__2026-07-14__0" data-save-key="done__2026-07-14__0" type="checkbox"></td>
             </tr>
@@ -503,7 +527,7 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
               <td><strong>Leg extension léger unilatéral</strong><small>Séance de volume, charge volontairement réduite.</small></td>
               <td>36 kg/jambe • 3×12</td>
               <td>2-2-2</td>
-              <td>90 s</td>
+              <td>3 min</td>
               <td>RIR 3</td>
               <td><input id="done__2026-07-16__2" data-save-key="done__2026-07-16__2" type="checkbox"></td>
             </tr>
@@ -683,7 +707,7 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
               <td><strong>Leg extension unilatéral</strong><small></small></td>
               <td>42 kg/jambe • 3×10</td>
               <td>2-2-2</td>
-              <td>2 min</td>
+              <td>3 min</td>
               <td>RIR 2–3</td>
               <td><input id="done__2026-07-18__0" data-save-key="done__2026-07-18__0" type="checkbox"></td>
             </tr>
@@ -950,7 +974,7 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
               <td><strong>Leg extension unilatéral</strong><small>Douleur pendant ≤3/10 et retour à 1/10 ou moins à J+1.</small></td>
               <td>42 kg/jambe • 3×11</td>
               <td>2-2-2</td>
-              <td>2 min</td>
+              <td>3 min</td>
               <td>RIR 3→2</td>
               <td><input id="done__2026-07-21__0" data-save-key="done__2026-07-21__0" type="checkbox"></td>
             </tr>
@@ -1170,7 +1194,7 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
               <td><strong>Leg extension léger unilatéral</strong><small>Séance de volume, charge volontairement réduite.</small></td>
               <td>36 kg/jambe • 3×12</td>
               <td>2-2-2</td>
-              <td>90 s</td>
+              <td>3 min</td>
               <td>RIR 3</td>
               <td><input id="done__2026-07-23__2" data-save-key="done__2026-07-23__2" type="checkbox"></td>
             </tr>
@@ -1350,7 +1374,7 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
               <td><strong>Leg extension unilatéral</strong><small></small></td>
               <td>42 kg/jambe • 3×11</td>
               <td>2-2-2</td>
-              <td>2 min</td>
+              <td>3 min</td>
               <td>RIR 2–3</td>
               <td><input id="done__2026-07-25__0" data-save-key="done__2026-07-25__0" type="checkbox"></td>
             </tr>
@@ -1617,7 +1641,7 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
               <td><strong>Leg extension unilatéral</strong><small>Douleur pendant ≤3/10 et retour à 1/10 ou moins à J+1.</small></td>
               <td>42 kg/jambe • 3×12</td>
               <td>2-2-2</td>
-              <td>2 min</td>
+              <td>3 min</td>
               <td>RIR 3→2</td>
               <td><input id="done__2026-07-28__0" data-save-key="done__2026-07-28__0" type="checkbox"></td>
             </tr>
@@ -1837,7 +1861,7 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
               <td><strong>Leg extension léger unilatéral</strong><small>Séance de volume, charge volontairement réduite.</small></td>
               <td>36 kg/jambe • 3×12</td>
               <td>2-2-2</td>
-              <td>90 s</td>
+              <td>3 min</td>
               <td>RIR 3</td>
               <td><input id="done__2026-07-30__2" data-save-key="done__2026-07-30__2" type="checkbox"></td>
             </tr>
@@ -2017,7 +2041,7 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
               <td><strong>Leg extension unilatéral</strong><small></small></td>
               <td>42 kg/jambe • 3×12</td>
               <td>2-2-2</td>
-              <td>2 min</td>
+              <td>3 min</td>
               <td>RIR 2–3</td>
               <td><input id="done__2026-08-01__0" data-save-key="done__2026-08-01__0" type="checkbox"></td>
             </tr>
@@ -2284,7 +2308,7 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
               <td><strong>Leg extension unilatéral</strong><small>Douleur pendant ≤3/10 et retour à 1/10 ou moins à J+1.</small></td>
               <td>45 kg/jambe • 4×8</td>
               <td>2-2-2</td>
-              <td>2 min</td>
+              <td>3 min</td>
               <td>RIR 3→2</td>
               <td><input id="done__2026-08-04__0" data-save-key="done__2026-08-04__0" type="checkbox"></td>
             </tr>
@@ -2504,7 +2528,7 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
               <td><strong>Leg extension léger unilatéral</strong><small>Séance de volume, charge volontairement réduite.</small></td>
               <td>36 kg/jambe • 3×12</td>
               <td>2-2-2</td>
-              <td>90 s</td>
+              <td>3 min</td>
               <td>RIR 3</td>
               <td><input id="done__2026-08-06__2" data-save-key="done__2026-08-06__2" type="checkbox"></td>
             </tr>
@@ -2684,7 +2708,7 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
               <td><strong>Leg extension unilatéral</strong><small></small></td>
               <td>45 kg/jambe • 4×8</td>
               <td>2-2-2</td>
-              <td>2 min</td>
+              <td>3 min</td>
               <td>RIR 2–3</td>
               <td><input id="done__2026-08-08__0" data-save-key="done__2026-08-08__0" type="checkbox"></td>
             </tr>
@@ -2951,7 +2975,7 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
               <td><strong>Leg extension unilatéral</strong><small>Douleur pendant ≤3/10 et retour à 1/10 ou moins à J+1.</small></td>
               <td>45 kg/jambe • 4×9</td>
               <td>2-2-2</td>
-              <td>2 min</td>
+              <td>3 min</td>
               <td>RIR 3→2</td>
               <td><input id="done__2026-08-11__0" data-save-key="done__2026-08-11__0" type="checkbox"></td>
             </tr>
@@ -3171,7 +3195,7 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
               <td><strong>Leg extension léger unilatéral</strong><small>Séance de volume, charge volontairement réduite.</small></td>
               <td>36 kg/jambe • 3×12</td>
               <td>2-2-2</td>
-              <td>90 s</td>
+              <td>3 min</td>
               <td>RIR 3</td>
               <td><input id="done__2026-08-13__2" data-save-key="done__2026-08-13__2" type="checkbox"></td>
             </tr>
@@ -3351,7 +3375,7 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
               <td><strong>Leg extension unilatéral</strong><small></small></td>
               <td>45 kg/jambe • 4×9</td>
               <td>2-2-2</td>
-              <td>2 min</td>
+              <td>3 min</td>
               <td>RIR 2–3</td>
               <td><input id="done__2026-08-15__0" data-save-key="done__2026-08-15__0" type="checkbox"></td>
             </tr>
@@ -3618,7 +3642,7 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
               <td><strong>Leg extension unilatéral</strong><small>Douleur pendant ≤3/10 et retour à 1/10 ou moins à J+1.</small></td>
               <td>42 kg/jambe • 3×10 (bilan)</td>
               <td>2-2-2</td>
-              <td>2 min</td>
+              <td>3 min</td>
               <td>RIR 3→2</td>
               <td><input id="done__2026-08-18__0" data-save-key="done__2026-08-18__0" type="checkbox"></td>
             </tr>
@@ -3735,13 +3759,13 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
 </section>
 </main>
 </div>
-<div class="footer">Volleyball Rebuild Project • Isaac Baudinet • V5</div>
+<div class="footer">Volleyball Rebuild Project • Isaac Baudinet • V5.2</div>
 </div>
 
 <script>
 const SUPABASE_URL = 'https://nnrltfkjwmxufpskyvin.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_1rc_fk0n_1LjVfj0jnXs5w_Se4iozls';
-const APP_VERSION = 'V5';
+const APP_VERSION = 'V5.2';
 const PROFILE_DATA = {"version": "V2", "updated_at": "2026-07-14", "profile": {"sex": "Homme", "height_cm": 180, "weight_kg": 91, "operational_target_kg": "87–88 au 18 août", "stated_target_kg": 82, "knee": {"diagnosis": "Syndrome fémoro-patellaire gauche", "rest_pain": 1, "stairs_pain": 0, "training_pain": 3, "next_day_pain": 1}, "teres_major": {"current_pain": 0, "pullup_tested": false}}};
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -3825,7 +3849,7 @@ async function loadCloud() {
     blockClosed = Boolean(saved.block_closed);
     restoreFields(saved.fields || {});
     applyBlockState();
-  } else if (saved.version === 'V4' || saved.version === 'V3' || saved.version === 'V2') {
+  } else if (saved.version === 'V5.1' || saved.version === 'V5' || saved.version === 'V4' || saved.version === 'V3' || saved.version === 'V2') {
     legacyV1 = saved.legacy_v1 || null;
     archives = Array.isArray(saved.archives) ? saved.archives : [];
     blockClosed = Boolean(saved.block_closed);
@@ -3908,8 +3932,40 @@ async function handleSession(session) {
 }
 
 
-let ws=null, timerId=null, elapsedId=null, remain=0, totalTimer=0, startedAt=0;
+let ws=null, timerId=null, elapsedId=null, remain=0, totalTimer=0, startedAt=0, timerStartedAt=0, timerEndAt=0, timerDoneCallback=null;
+
+const TIMER_RADIUS = 92;
+const TIMER_CIRCUMFERENCE = 2 * Math.PI * TIMER_RADIUS;
+
+function setupVisualTimer(){
+ const circle=document.getElementById('timerCircle');
+ if(circle){
+   circle.style.strokeDasharray=`${TIMER_CIRCUMFERENCE}`;
+   circle.style.strokeDashoffset='0';
+ }
+}
+function phaseClass(label){
+ const l=String(label).toUpperCase();
+ if(l.includes('MONTE')) return 'phase-up';
+ if(l.includes('MAINTIENS') || l.includes('HOLD')) return 'phase-hold';
+ if(l.includes('DESCENDS')) return 'phase-down';
+ if(l.includes('REPOS')) return 'phase-rest';
+ if(l.includes('POUSSE') || l.includes('MAX')) return 'phase-max';
+ return 'phase-ready';
+}
+function updatePhaseVisual(label){
+ const timer=document.getElementById('visualTimer');
+ const chip=document.getElementById('timerPhaseChip');
+ if(timer){
+   timer.className=`visual-timer ${phaseClass(label)}`;
+ }
+ if(chip) chip.textContent=label;
+}
 function inferSets(t){const m=String(t).match(/(\d+)\s*[×x]\s*(\d+)/i);return m?Number(m[1]):(/3\s+séries/i.test(t)?3:1)}
+function inferReps(t){
+ const m=String(t).match(/(\d+)\s*[×x]\s*(\d+)/i);
+ return m?Number(m[2]):1
+}
 function restSeconds(t){t=String(t).toLowerCase().replace(',','.');let s=0,m=t.match(/(\d+(?:\.\d+)?)\s*min/),q=t.match(/(\d+)\s*s/);if(m)s+=Math.round(Number(m[1])*60);if(q)s+=Number(q[1]);return s||60}
 function readExercises(date){
  const day=document.getElementById(date); if(!day)return[];
@@ -3917,7 +3973,7 @@ function readExercises(date){
   i,name:c[0]?.querySelector('strong')?.textContent.trim()||`Exercice ${i+1}`,
   note:c[0]?.querySelector('small')?.textContent.trim()||'',load:c[1]?.textContent.trim()||'—',
   tempo:c[2]?.textContent.trim()||'—',rest:c[3]?.textContent.trim()||'—',effort:c[4]?.textContent.trim()||'—',
-  key:cb?.dataset.saveKey||null,sets:inferSets(c[1]?.textContent),doneSets:0,done:Boolean(cb?.checked),feedback:{}
+  key:cb?.dataset.saveKey||null,sets:inferSets(c[1]?.textContent),reps:inferReps(c[1]?.textContent),doneSets:0,done:Boolean(cb?.checked),feedback:{}
  }})
 }
 function startWorkout(date){
@@ -3933,27 +3989,164 @@ function renderWorkout(){
  const e=ws.ex[ws.current];
  exerciseCounter.textContent=`Exercice ${ws.current+1} / ${ws.ex.length}`;exerciseName.textContent=e.name;
  exerciseLoad.textContent=e.load;exerciseTempo.textContent=e.tempo;exerciseRest.textContent=e.rest;exerciseEffort.textContent=e.effort;exerciseNote.textContent=e.note;
- timerDisplay.textContent='00:00';timerLabel.textContent='PRÊT';timerBar.style.width='0%';doneSet.disabled=false;skipRest.disabled=true;
+ timerDisplay.textContent='0.0';timerLabel.textContent='PRÊT';timerBar.style.width='0%';updatePhaseVisual('PRÊT');setupVisualTimer();doneSet.disabled=false;skipRest.disabled=true;
+ doneSet.textContent=e.tempo.replaceAll(' ','').includes('2-2-2')?'Démarrer la série':'Série terminée';
  setDots.innerHTML='';for(let i=0;i<e.sets;i++){let d=document.createElement('div');d.className='dot '+(i<e.doneSets?'done':i===e.doneSets?'active':'');d.textContent=i+1;setDots.appendChild(d)}
  exerciseList.innerHTML='';ws.ex.forEach((x,i)=>{let b=document.createElement('button');b.textContent=`${i+1}. ${x.name}`;if(i===ws.current)b.classList.add('active');if(x.done||x.doneSets>=x.sets)b.classList.add('done');b.onclick=()=>{saveExerciseFeedback();stopTimer();ws.current=i;renderWorkout()};exerciseList.appendChild(b)});
  sessionBar.style.width=`${Math.round(ws.ex.filter(x=>x.done||x.doneSets>=x.sets).length/ws.ex.length*100)}%`;loadFeedback()
 }
 function completeSet(){
- const e=ws.ex[ws.current];e.doneSets=Math.min(e.sets,e.doneSets+1);
- if(e.doneSets>=e.sets){e.done=true;if(e.key){const x=document.querySelector(`[data-save-key="${e.key}"]`);if(x)x.checked=true}saveExerciseFeedback();scheduleSave();return setTimeout(nextExercise,300)}
- renderWorkout();const iso=/pima|ima/i.test(e.name),t222=e.tempo.replaceAll(' ','').includes('2-2-2');
- if(iso)countdown(5,'POUSSE / MAINTIENS',()=>countdown(3,'REPOS COURT'));
- else if(t222)phase([['MONTE',2],['MAINTIENS',2],['DESCENDS',2]],()=>countdown(restSeconds(e.rest),'REPOS'));
- else countdown(restSeconds(e.rest),'REPOS')
+ const e=ws.ex[ws.current];
+ const iso=/pima|ima/i.test(e.name);
+ const t222=e.tempo.replaceAll(' ','').includes('2-2-2');
+
+ // Pour un exercice tempo 2-2-2, le bouton démarre toute la série guidée.
+ if(t222){
+   doneSet.disabled=true;
+   skipRest.disabled=true;
+   return runTempoSet(e);
+ }
+
+ // Pour les autres exercices, la série est validée manuellement.
+ e.doneSets=Math.min(e.sets,e.doneSets+1);
+ if(e.doneSets>=e.sets){
+   e.done=true;
+   if(e.key){
+     const x=document.querySelector(`[data-save-key="${e.key}"]`);
+     if(x)x.checked=true;
+   }
+   saveExerciseFeedback();
+   scheduleSave();
+   return setTimeout(nextExercise,300);
+ }
+ renderWorkout();
+ if(iso) countdown(5,'POUSSE / MAINTIENS',()=>countdown(3,'REPOS COURT'));
+ else countdown(restSeconds(e.rest),'REPOS');
 }
-function phase(a,done){if(!a.length)return done&&done();const [l,s]=a.shift();countdown(s,l,()=>phase(a,done))}
+function phase(a,done){
+ if(!a.length)return done&&done();
+ const [l,s]=a.shift();
+ transitionCue();
+ countdown(s,l,()=>phase(a,done));
+}
+function transitionCue(){
+ try{
+   const c=new(window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();
+   o.connect(g);g.connect(c.destination);o.frequency.value=660;g.gain.value=.05;o.start();
+   setTimeout(()=>{o.stop();c.close()},100);
+ }catch{}
+ if(navigator.vibrate)navigator.vibrate(70);
+}
+
+function runTempoSet(e){
+ const totalReps=e.reps||10;
+ let currentRep=1;
+
+ function runRep(){
+   if(currentRep>totalReps){
+     e.doneSets=Math.min(e.sets,e.doneSets+1);
+     renderWorkout();
+
+     if(e.doneSets>=e.sets){
+       e.done=true;
+       if(e.key){
+         const x=document.querySelector(`[data-save-key="${e.key}"]`);
+         if(x)x.checked=true;
+       }
+       saveExerciseFeedback();
+       scheduleSave();
+       timerLabel.textContent='EXERCICE TERMINÉ';
+       return setTimeout(nextExercise,500);
+     }
+
+     // Repos obligatoire de 3 minutes entre les séries de leg extension 2-2-2.
+     return countdown(180,`REPOS • SÉRIE ${e.doneSets} / ${e.sets}`,()=>{
+       doneSet.disabled=false;
+       skipRest.disabled=true;
+       timerLabel.textContent=`PRÊT • SÉRIE ${e.doneSets+1} / ${e.sets}`;
+       updatePhaseVisual(`PRÊT • SÉRIE ${e.doneSets+1} / ${e.sets}`);
+       timerDisplay.textContent='0.0';
+     });
+   }
+
+   const rep=currentRep;
+   const phases=[
+     [`REP ${rep} / ${totalReps} • MONTE`,2],
+     [`REP ${rep} / ${totalReps} • MAINTIENS`,2],
+     [`REP ${rep} / ${totalReps} • DESCENDS`,2]
+   ];
+
+   phase(phases,()=>{
+     currentRep+=1;
+     runRep();
+   });
+ }
+
+ runRep();
+}
 function countdown(sec,label,done){
- stopTimer();remain=totalTimer=sec;timerLabel.textContent=label;doneSet.disabled=true;skipRest.disabled=false;drawTimer();
- timerId=setInterval(()=>{remain--;drawTimer();if(remain<=0){stopTimer();beep();doneSet.disabled=false;skipRest.disabled=true;timerLabel.textContent='PRÊT POUR LA SUITE';if(done)done()}},1000)
+ stopTimer();
+ totalTimer=sec;
+ remain=sec;
+ timerDoneCallback=done||null;
+ timerStartedAt=performance.now();
+ timerEndAt=timerStartedAt+sec*1000;
+ timerLabel.textContent=label;
+ updatePhaseVisual(label);
+ doneSet.disabled=true;
+ skipRest.disabled=false;
+ drawTimerHighRes();
+ timerId=requestAnimationFrame(tickTimer);
 }
-function drawTimer(){timerDisplay.textContent=fmt(remain);timerBar.style.width=`${totalTimer?Math.round((totalTimer-remain)/totalTimer*100):0}%`}
-function stopTimer(){clearInterval(timerId);timerId=null}
-function skipRest(){stopTimer();remain=0;drawTimer();doneSet.disabled=false;skipRest.disabled=true;timerLabel.textContent='REPOS PASSÉ'}
+
+function tickTimer(now){
+ const remainingMs=Math.max(0,timerEndAt-now);
+ remain=remainingMs/1000;
+ drawTimerHighRes();
+ if(remainingMs<=0){
+   stopTimer(false);
+   beep();
+   doneSet.disabled=false;
+   skipRest.disabled=true;
+   timerLabel.textContent='PRÊT POUR LA SUITE';
+   updatePhaseVisual('PRÊT POUR LA SUITE');
+   timerDisplay.textContent='0.0';
+   const cb=timerDoneCallback;
+   timerDoneCallback=null;
+   if(cb) cb();
+   return;
+ }
+ timerId=requestAnimationFrame(tickTimer);
+}
+
+function drawTimerHighRes(){
+ const value=Math.max(0,remain);
+ timerDisplay.textContent=value.toFixed(1);
+ const progress=totalTimer?Math.max(0,Math.min(1,(totalTimer-value)/totalTimer)):0;
+ timerBar.style.width=`${Math.round(progress*100)}%`;
+ const circle=document.getElementById('timerCircle');
+ if(circle){
+   circle.style.strokeDasharray=`${TIMER_CIRCUMFERENCE}`;
+   circle.style.strokeDashoffset=`${TIMER_CIRCUMFERENCE*progress}`;
+ }
+}
+
+function stopTimer(clearCallback=true){
+ if(timerId) cancelAnimationFrame(timerId);
+ timerId=null;
+ if(clearCallback) timerDoneCallback=null;
+}
+
+function skipRest(){
+ stopTimer();
+ remain=0;
+ drawTimerHighRes();
+ doneSet.disabled=false;
+ skipRest.disabled=true;
+ timerLabel.textContent='REPOS PASSÉ';
+ updatePhaseVisual('REPOS PASSÉ');
+ timerDisplay.textContent='0.0';
+}
 function nextExercise(){stopTimer();saveExerciseFeedback();if(ws.current<ws.ex.length-1){ws.current++;renderWorkout()}else finishWorkout()}
 function skipExercise(){if(confirm('Passer cet exercice ?')){ws.ex[ws.current].skipped=true;nextExercise()}}
 function loadFeedback(){const f=ws.ex[ws.current].feedback;wRir.value=f.rir??'';wTech.value=f.tech??'';wKnee.value=f.knee??'';wTeres.value=f.teres??'';wNotes.value=f.notes??''}
@@ -3971,6 +4164,7 @@ function fmt(s){const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),q=s%60;retu
 function beep(){try{const c=new(window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=880;g.gain.value=.08;o.start();setTimeout(()=>{o.stop();c.close()},180)}catch{}if(navigator.vibrate)navigator.vibrate([120,60,120])}
 
 async function init() {
+  setupVisualTimer();
   const {data}=await supabaseClient.auth.getSession();
   await handleSession(data.session);
   supabaseClient.auth.onAuthStateChange(async(_event,session)=>handleSession(session));
@@ -4252,7 +4446,17 @@ window.addEventListener('DOMContentLoaded', init);
     <p id="exerciseNote" style="color:#dce7ff"></p><div id="setDots" class="dots"></div>
    </div>
    <div>
-    <div id="timerLabel" class="timer-label">PRÊT</div><div id="timerDisplay" class="timer">00:00</div>
+    <div id="timerLabel" class="timer-label">PRÊT</div>
+    <div id="visualTimer" class="visual-timer phase-ready">
+      <svg viewBox="0 0 220 220" aria-hidden="true">
+        <circle class="track" cx="110" cy="110" r="92"></circle>
+        <circle id="timerCircle" class="progress" cx="110" cy="110" r="92"></circle>
+      </svg>
+      <div class="timer-inner">
+        <div id="timerPhaseChip" class="phase-chip">PRÊT</div>
+        <div id="timerDisplay" class="timer-number">0.0</div>
+      </div>
+    </div>
     <div class="bar"><span id="timerBar"></span></div>
     <div class="actions">
      <button id="doneSet" onclick="completeSet()">Série terminée</button>
