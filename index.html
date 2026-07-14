@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Volleyball Rebuild V2 — Isaac</title>
+<title>Volleyball Rebuild V3 — Isaac</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--navy:#0b1830;--blue:#285ee8;--ink:#172033;--muted:#667085;--line:#dfe5ee;--bg:#f3f6fa;--white:#fff;--green:#0f7b5d;--soft:#edf3ff;--amber:#b26a00;--red:#b42318}
@@ -72,12 +72,39 @@ input,select{width:100%;margin-top:5px;padding:8px;border:1px solid var(--line);
 @media(max-width:900px){.hero,.layout{grid-template-columns:1fr}nav{position:relative;max-height:none}.kpis,.grid,.feedback,.review .grid{grid-template-columns:1fr 1fr}}
 @media(max-width:650px){.wrap{padding:10px}.hero{padding:28px 22px;border-radius:16px}.kpis,.grid,.feedback,.review .grid{grid-template-columns:1fr}.weektitle{align-items:flex-start;flex-direction:column}.phase{text-align:left;margin-top:8px}.userbar{width:100%;margin-left:0;justify-content:space-between}th,td{padding:9px 7px;font-size:.8rem}}
 @media print{body{background:white}.wrap{max-width:none;padding:0}.toolbar,nav,.auth-screen{display:none!important}.layout{display:block}.hero{border-radius:0;page-break-after:always}.week{page-break-before:always}.day{break-inside:avoid;box-shadow:none}.panel,.review{box-shadow:none}}
+
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.stat-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px}
+.stat-card span{display:block;color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.07em}
+.stat-card strong{display:block;font-size:1.55rem;margin-top:3px}
+.archive-banner{display:none;margin:14px 0;padding:14px 17px;border-radius:12px;background:#edf8f3;border:1px solid #b9e4d4;color:var(--green);font-weight:700}
+.archive-banner.visible{display:block}
+.modal-backdrop{position:fixed;inset:0;background:rgba(11,24,48,.72);display:flex;align-items:center;justify-content:center;padding:18px;z-index:10000}
+.modal-card{width:min(760px,100%);max-height:88vh;overflow:auto;background:white;border-radius:20px;padding:24px;box-shadow:0 28px 80px rgba(0,0,0,.35)}
+.modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:14px}
+.modal-head h2{margin:0}
+.icon-button{background:#edf3ff;color:#285ee8;padding:8px 11px}
+.archive-item{border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}
+.archive-item header{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.archive-item h3{margin:0 0 4px}
+.archive-item small{color:var(--muted)}
+.archive-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.archive-summary div{background:#f8fafc;border-radius:9px;padding:9px}
+.archive-summary span{display:block;font-size:.66rem;text-transform:uppercase;color:var(--muted)}
+.archive-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.danger-button{background:#fff0ef;color:#b42318}
+.secondary-button{background:white;color:var(--navy);border:1px solid var(--line)}
+button:disabled{opacity:.55;cursor:not-allowed}
+body.block-closed main input,body.block-closed main select{background:#f2f4f7;color:#667085}
+@media(max-width:900px){.stats-grid,.archive-summary{grid-template-columns:1fr 1fr}}
+@media(max-width:650px){.stats-grid,.archive-summary{grid-template-columns:1fr}.modal-card{padding:18px}}
+
 </style>
 </head>
 <body>
 <div id="authScreen" class="auth-screen">
   <div class="auth-card">
-    <span class="tag" style="color:#285ee8">VOLLEYBALL REBUILD V2</span>
+    <span class="tag" style="color:#285ee8">VOLLEYBALL REBUILD V3</span>
     <h2>Connexion</h2>
     <p>Utilise le même compte sur tous tes appareils.</p>
     <label>Adresse e-mail<input id="authEmail" type="email" autocomplete="email"></label>
@@ -90,7 +117,7 @@ input,select{width:100%;margin-top:5px;padding:8px;border:1px solid var(--line);
 <div class="wrap">
 <section class="hero">
   <div>
-    <span class="tag">V2 • 14 JUILLET → 18 AOÛT 2026</span>
+    <span class="tag">V3 • 14 JUILLET → 18 AOÛT 2026</span>
     <h1>VOLLEYBALL<br>REBUILD PROJECT</h1>
     <p>Programme recalé sur ton niveau réel au 14 juillet : 91 kg, bench à 77,5 kg, remusculation unilatérale du genou gauche et reprise progressive du tirage vertical.</p>
   </div>
@@ -107,10 +134,14 @@ input,select{width:100%;margin-top:5px;padding:8px;border:1px solid var(--line);
 <div class="toolbar">
   <button onclick="window.print()">Imprimer / PDF</button>
   <button onclick="saveNow()">Sauvegarder maintenant</button>
-  <button onclick="clearV2()">Réinitialiser la V2</button>
   <button onclick="goToday()">Aller à aujourd’hui</button>
+  <button id="closeBlockButton" onclick="closeBlock()">Clôturer le bloc</button>
+  <button id="reopenBlockButton" class="secondary-button hidden" onclick="reopenBlock()">Réouvrir le bloc</button>
+  <button class="secondary-button" onclick="openHistory()">Historique</button>
+  <button class="secondary-button" onclick="exportBackup()">Exporter les données</button>
   <div id="userBar" class="userbar hidden"><span id="userEmail"></span><span id="syncState" class="sync">Synchronisé</span><button onclick="signOut()">Déconnexion</button></div>
 </div>
+<div id="archiveBanner" class="archive-banner">Ce bloc est clôturé et verrouillé en lecture seule. Il reste synchronisé et consultable sur tous tes appareils.</div>
 
 <div class="layout">
 <nav>
@@ -120,6 +151,7 @@ input,select{width:100%;margin-top:5px;padding:8px;border:1px solid var(--line);
   <a href="#nutrition">Calories & macros</a>
   <a href="#progression">Progression</a>
   <a href="#grand-rond">Grand rond</a>
+  <a href="#dashboard">Tableau de bord</a>
   <a href="#week-1">Semaine 1 • 14 juillet</a><a href="#week-2">Semaine 2 • 20 juillet</a><a href="#week-3">Semaine 3 • 27 juillet</a><a href="#week-4">Semaine 4 • 3 août</a><a href="#week-5">Semaine 5 • 10 août</a><a href="#week-6">Semaine 6 • 17 août</a>
   <a href="#final">Bilan du 18 août</a>
 </nav>
@@ -167,6 +199,15 @@ input,select{width:100%;margin-top:5px;padding:8px;border:1px solid var(--line);
 <section class="panel" id="grand-rond">
   <h2>Retour du grand rond</h2>
   <p>Progression prévue : 30 → 35 → 40 → 45 → 50 kg au tirage vertical. Aucune traction libre avant deux séances de tirage à 50 kg sans douleur, puis une étape de tractions assistées.</p>
+</section>
+<section class="panel" id="dashboard">
+  <h2>Tableau de bord du bloc</h2>
+  <div class="stats-grid">
+    <div class="stat-card"><span>Exercices terminés</span><strong id="statCompletion">0 / 0</strong></div>
+    <div class="stat-card"><span>RPE moyen</span><strong id="statRpe">—</strong></div>
+    <div class="stat-card"><span>Douleur genou moyenne</span><strong id="statKnee">—</strong></div>
+    <div class="stat-card"><span>Dernier poids saisi</span><strong id="statWeight">—</strong></div>
+  </div>
 </section>
 
 
@@ -2885,13 +2926,13 @@ input,select{width:100%;margin-top:5px;padding:8px;border:1px solid var(--line);
 </section>
 </main>
 </div>
-<div class="footer">Volleyball Rebuild Project • Isaac Baudinet • V2</div>
+<div class="footer">Volleyball Rebuild Project • Isaac Baudinet • V3</div>
 </div>
 
 <script>
 const SUPABASE_URL = 'https://nnrltfkjwmxufpskyvin.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_1rc_fk0n_1LjVfj0jnXs5w_Se4iozls';
-const APP_VERSION = 'V2';
+const APP_VERSION = 'V3';
 const PROFILE_DATA = {"version": "V2", "updated_at": "2026-07-14", "profile": {"sex": "Homme", "height_cm": 180, "weight_kg": 91, "operational_target_kg": "87–88 au 18 août", "stated_target_kg": 82, "knee": {"diagnosis": "Syndrome fémoro-patellaire gauche", "rest_pain": 1, "stairs_pain": 0, "training_pain": 3, "next_day_pain": 1}, "teres_major": {"current_pain": 0, "pullup_tested": false}}};
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -2899,6 +2940,8 @@ let currentUser = null;
 let saveTimer = null;
 let loading = false;
 let legacyV1 = null;
+let archives = [];
+let blockClosed = false;
 
 function fields() {
   return [...document.querySelectorAll('[data-save-key]')];
@@ -2922,6 +2965,7 @@ function restoreFields(obj) {
     else el.value = obj[key] ?? '';
   });
   loading = false;
+  updateStats();
 }
 
 function syncState(text, type='ok') {
@@ -2949,23 +2993,42 @@ async function loadCloud() {
   }
 
   if (!data?.form_data) {
-    await saveCloud(); return;
+    archives = [];
+    blockClosed = false;
+    applyBlockState();
+    await saveCloud();
+    return;
   }
 
   const saved = data.form_data;
   if (Array.isArray(saved)) {
-    // Preserve the old V1 payload instead of trying to map it to the new calendar.
     legacyV1 = saved;
+    archives = [];
+    blockClosed = false;
     restoreFields({});
     await saveCloud();
   } else if (saved.version === APP_VERSION) {
     legacyV1 = saved.legacy_v1 || null;
+    archives = Array.isArray(saved.archives) ? saved.archives : [];
+    blockClosed = Boolean(saved.block_closed);
     restoreFields(saved.fields || {});
+    applyBlockState();
+  } else if (saved.version === 'V2') {
+    legacyV1 = saved.legacy_v1 || null;
+    archives = Array.isArray(saved.archives) ? saved.archives : [];
+    blockClosed = Boolean(saved.block_closed);
+    restoreFields(saved.fields || {});
+    applyBlockState();
+    await saveCloud();
   } else {
     legacyV1 = saved.legacy_v1 || saved;
+    archives = Array.isArray(saved.archives) ? saved.archives : [];
+    blockClosed = false;
     restoreFields({});
+    applyBlockState();
     await saveCloud();
   }
+  renderHistory();
   syncState('Synchronisé','ok');
 }
 
@@ -2976,6 +3039,8 @@ async function saveCloud() {
     version: APP_VERSION,
     profile: PROFILE_DATA,
     fields: collectFields(),
+    archives,
+    block_closed: blockClosed,
     legacy_v1: legacyV1,
     updated_at: new Date().toISOString()
   };
@@ -2988,7 +3053,8 @@ async function saveCloud() {
 }
 
 function scheduleSave() {
-  if (!currentUser || loading) return;
+  if (!currentUser || loading || blockClosed) return;
+  updateStats();
   syncState('Modification…','wait');
   clearTimeout(saveTimer);
   saveTimer = setTimeout(saveCloud, 650);
@@ -3033,15 +3099,198 @@ async function init() {
   await handleSession(data.session);
   supabaseClient.auth.onAuthStateChange(async(_event,session)=>handleSession(session));
   fields().forEach(el=>{el.addEventListener('input',scheduleSave);el.addEventListener('change',scheduleSave);});
+  applyBlockState();
+  updateStats();
+  renderHistory();
 }
 
 async function saveNow() { await saveCloud(); }
 
-async function clearV2() {
-  if(!confirm('Effacer toutes les données de la V2 ? L’archive V1 restera conservée dans Supabase.'))return;
-  loading=true;
-  fields().forEach(el=>{if(el.type==='checkbox')el.checked=false;else if(el.tagName==='SELECT')el.selectedIndex=0;else el.value='';});
-  loading=false; await saveCloud();
+
+function numericValues(prefix) {
+  return fields()
+    .filter(el => el.dataset.saveKey && el.dataset.saveKey.startsWith(prefix) && el.value !== '')
+    .map(el => Number(el.value))
+    .filter(Number.isFinite);
+}
+
+function currentSummary(fieldObject = collectFields()) {
+  const entries = Object.entries(fieldObject || {});
+  const checkboxEntries = entries.filter(([key]) => key.startsWith('done__'));
+  const checked = checkboxEntries.filter(([,value]) => Boolean(value)).length;
+  const avg = prefix => {
+    const values = entries
+      .filter(([key,value]) => key.startsWith(prefix) && value !== '')
+      .map(([,value]) => Number(value))
+      .filter(Number.isFinite);
+    return values.length ? values.reduce((a,b)=>a+b,0)/values.length : null;
+  };
+  const weights = entries
+    .filter(([key,value]) => key.startsWith('weight__') && value !== '')
+    .map(([,value]) => Number(value))
+    .filter(Number.isFinite);
+  return {
+    checked,
+    total: checkboxEntries.length,
+    rpe_avg: avg('rpe__'),
+    knee_avg: avg('knee__'),
+    latest_weight: weights.length ? weights[weights.length - 1] : null
+  };
+}
+
+function formatOneDecimal(value) {
+  return value == null || !Number.isFinite(value) ? '—' : value.toFixed(1);
+}
+
+function updateStats() {
+  const summary = currentSummary();
+  document.getElementById('statCompletion').textContent = `${summary.checked} / ${summary.total}`;
+  document.getElementById('statRpe').textContent = formatOneDecimal(summary.rpe_avg);
+  document.getElementById('statKnee').textContent = formatOneDecimal(summary.knee_avg);
+  document.getElementById('statWeight').textContent = summary.latest_weight == null ? '—' : `${summary.latest_weight.toFixed(1)} kg`;
+}
+
+function applyBlockState() {
+  document.body.classList.toggle('block-closed', blockClosed);
+  fields().forEach(el => el.disabled = blockClosed);
+  const closeButton = document.getElementById('closeBlockButton');
+  const reopenButton = document.getElementById('reopenBlockButton');
+  const banner = document.getElementById('archiveBanner');
+  closeButton.disabled = blockClosed;
+  closeButton.textContent = blockClosed ? 'Bloc clôturé' : 'Clôturer le bloc';
+  reopenButton.classList.toggle('hidden', !blockClosed);
+  banner.classList.toggle('visible', blockClosed);
+}
+
+function archiveId() {
+  return (window.crypto && crypto.randomUUID)
+    ? crypto.randomUUID()
+    : `archive-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+async function closeBlock() {
+  if (blockClosed) return;
+  const ok = confirm(
+    'Clôturer le bloc du 14 juillet au 18 août ?\n\n' +
+    'Une archive complète sera créée dans Supabase et les champs seront verrouillés. ' +
+    'Tu pourras réouvrir le bloc pour corriger une erreur.'
+  );
+  if (!ok) return;
+
+  await saveCloud();
+  const snapshotFields = collectFields();
+  archives.unshift({
+    id: archiveId(),
+    title: 'Bloc V2 — 14 juillet au 18 août 2026',
+    closed_at: new Date().toISOString(),
+    profile: PROFILE_DATA,
+    fields: snapshotFields,
+    summary: currentSummary(snapshotFields)
+  });
+  blockClosed = true;
+  applyBlockState();
+  renderHistory();
+  await saveCloud();
+  alert('Bloc clôturé et archivé dans Supabase.');
+}
+
+async function reopenBlock() {
+  if (!blockClosed) return;
+  const ok = confirm(
+    'Réouvrir ce bloc ?\n\nLes champs redeviendront modifiables. ' +
+    'L’archive déjà créée restera conservée dans l’historique.'
+  );
+  if (!ok) return;
+  blockClosed = false;
+  applyBlockState();
+  await saveCloud();
+}
+
+function openHistory() {
+  renderHistory();
+  document.getElementById('historyModal').classList.remove('hidden');
+}
+
+function closeHistory() {
+  document.getElementById('historyModal').classList.add('hidden');
+}
+
+function modalBackdropClick(event) {
+  if (event.target.id === 'historyModal') closeHistory();
+}
+
+function archiveDate(value) {
+  try {
+    return new Intl.DateTimeFormat('fr-FR', {
+      dateStyle:'long', timeStyle:'short'
+    }).format(new Date(value));
+  } catch {
+    return value || 'Date inconnue';
+  }
+}
+
+function renderHistory() {
+  const list = document.getElementById('historyList');
+  if (!list) return;
+  if (!archives.length) {
+    list.innerHTML = '<div class="callout">Aucun bloc archivé pour le moment.</div>';
+    return;
+  }
+  list.innerHTML = archives.map((archive, index) => {
+    const s = archive.summary || currentSummary(archive.fields || {});
+    return `
+      <article class="archive-item">
+        <header>
+          <div>
+            <h3>${escapeHtml(archive.title || `Bloc archivé ${index + 1}`)}</h3>
+            <small>Clôturé le ${escapeHtml(archiveDate(archive.closed_at))}</small>
+          </div>
+          <span class="sync">Archive ${archives.length - index}</span>
+        </header>
+        <div class="archive-summary">
+          <div><span>Exercices</span><strong>${s.checked || 0} / ${s.total || 0}</strong></div>
+          <div><span>RPE moyen</span><strong>${formatOneDecimal(s.rpe_avg)}</strong></div>
+          <div><span>Douleur genou</span><strong>${formatOneDecimal(s.knee_avg)}</strong></div>
+          <div><span>Dernier poids</span><strong>${s.latest_weight == null ? '—' : Number(s.latest_weight).toFixed(1) + ' kg'}</strong></div>
+        </div>
+        <div class="archive-actions">
+          <button class="secondary-button" onclick="downloadArchive('${archive.id}')">Télécharger cette archive</button>
+        </div>
+      </article>`;
+  }).join('');
+}
+
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replaceAll('&','&amp;').replaceAll('<','&lt;')
+    .replaceAll('>','&gt;').replaceAll('"','&quot;')
+    .replaceAll("'",'&#039;');
+}
+
+function downloadJson(filename, value) {
+  const blob = new Blob([JSON.stringify(value, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function downloadArchive(id) {
+  const archive = archives.find(item => item.id === id);
+  if (!archive) return;
+  downloadJson(`volleyball-rebuild-archive-${id}.json`, archive);
+}
+
+function exportBackup() {
+  downloadJson('volleyball-rebuild-V3-backup.json', {
+    exported_at: new Date().toISOString(),
+    version: APP_VERSION,
+    profile: PROFILE_DATA,
+    block_closed: blockClosed,
+    current_fields: collectFields(),
+    archives,
+    legacy_v1: legacyV1
+  });
 }
 
 function goToday() {
@@ -3052,5 +3301,17 @@ function goToday() {
 
 window.addEventListener('DOMContentLoaded', init);
 </script>
+
+<div id="historyModal" class="modal-backdrop hidden" onclick="modalBackdropClick(event)">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div><span class="tag" style="color:#285ee8">ARCHIVES SUPABASE</span><h2>Historique des blocs</h2></div>
+      <button class="icon-button" onclick="closeHistory()">Fermer</button>
+    </div>
+    <p>Chaque clôture crée une copie complète et immuable du suivi au moment de l’archivage.</p>
+    <div id="historyList"></div>
+  </div>
+</div>
+
 </body>
 </html>
