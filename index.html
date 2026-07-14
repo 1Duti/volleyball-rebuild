@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Volleyball Rebuild V3 — Isaac</title>
+<title>Volleyball Rebuild V4 — Isaac</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--navy:#0b1830;--blue:#285ee8;--ink:#172033;--muted:#667085;--line:#dfe5ee;--bg:#f3f6fa;--white:#fff;--green:#0f7b5d;--soft:#edf3ff;--amber:#b26a00;--red:#b42318}
@@ -99,12 +99,24 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
 @media(max-width:900px){.stats-grid,.archive-summary{grid-template-columns:1fr 1fr}}
 @media(max-width:650px){.stats-grid,.archive-summary{grid-template-columns:1fr}.modal-card{padding:18px}}
 
+
+.readiness-box{margin:14px 18px 18px;padding:14px 16px;border-radius:12px;background:#f8fafc;border:1px solid var(--line)}
+.readiness-box strong{display:block;margin-bottom:5px}
+.readiness-result{font-weight:800}
+.readiness-result.good{color:var(--green)}
+.readiness-result.hold{color:var(--amber)}
+.readiness-result.reduce{color:var(--red)}
+.rir-help{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px}
+.rir-help div{background:#f8fafc;border-radius:9px;padding:9px;text-align:center}
+.rir-help strong{display:block}
+@media(max-width:700px){.rir-help{grid-template-columns:1fr 1fr}}
+
 </style>
 </head>
 <body>
 <div id="authScreen" class="auth-screen">
   <div class="auth-card">
-    <span class="tag" style="color:#285ee8">VOLLEYBALL REBUILD V3</span>
+    <span class="tag" style="color:#285ee8">VOLLEYBALL REBUILD V4</span>
     <h2>Connexion</h2>
     <p>Utilise le même compte sur tous tes appareils.</p>
     <label>Adresse e-mail<input id="authEmail" type="email" autocomplete="email"></label>
@@ -117,7 +129,7 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
 <div class="wrap">
 <section class="hero">
   <div>
-    <span class="tag">V3 • 14 JUILLET → 18 AOÛT 2026</span>
+    <span class="tag">V4 • 14 JUILLET → 18 AOÛT 2026</span>
     <h1>VOLLEYBALL<br>REBUILD PROJECT</h1>
     <p>Programme recalé sur ton niveau réel au 14 juillet : 91 kg, bench à 77,5 kg, remusculation unilatérale du genou gauche et reprise progressive du tirage vertical.</p>
   </div>
@@ -150,6 +162,7 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
   <a href="#rules">Règles de décision</a>
   <a href="#nutrition">Calories & macros</a>
   <a href="#progression">Progression</a>
+  <a href="#rir-guide">Évaluer l’effort</a>
   <a href="#grand-rond">Grand rond</a>
   <a href="#dashboard">Tableau de bord</a>
   <a href="#week-1">Semaine 1 • 14 juillet</a><a href="#week-2">Semaine 2 • 20 juillet</a><a href="#week-3">Semaine 3 • 27 juillet</a><a href="#week-4">Semaine 4 • 3 août</a><a href="#week-5">Semaine 5 • 10 août</a><a href="#week-6">Semaine 6 • 17 août</a>
@@ -195,6 +208,18 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
   <p>Les semaines 1 à 3 utilisent une double progression. Les semaines 4 et 5 diminuent les répétitions et augmentent modérément la charge. Les charges des machines sont spécifiques à ta salle : elles ne doivent pas être comparées à celles d’une autre machine.</p>
   <div class="callout"><strong>Nouvel apprentissage :</strong> le hip thrust, le leg curl, le landmine press et le soulevé de terre roumain commencent volontairement bas. La première priorité est la maîtrise technique.</div>
 </section>
+<section class="panel" id="rir-guide">
+  <h2>Comment noter ton effort</h2>
+  <p>Indique combien de répétitions propres tu aurais encore pu faire à la fin de la dernière série du mouvement principal.</p>
+  <div class="rir-help">
+    <div><strong>4+</strong><span>Très facile</span></div>
+    <div><strong>3</strong><span>Facile</span></div>
+    <div><strong>2</strong><span>Correct</span></div>
+    <div><strong>1</strong><span>Difficile</span></div>
+    <div><strong>0</strong><span>Maximum</span></div>
+  </div>
+  <div class="callout warning"><strong>Cible habituelle :</strong> 2 à 3 répétitions encore possibles avec une technique propre.</div>
+</section>
 
 <section class="panel" id="grand-rond">
   <h2>Retour du grand rond</h2>
@@ -204,7 +229,7 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
   <h2>Tableau de bord du bloc</h2>
   <div class="stats-grid">
     <div class="stat-card"><span>Exercices terminés</span><strong id="statCompletion">0 / 0</strong></div>
-    <div class="stat-card"><span>RPE moyen</span><strong id="statRpe">—</strong></div>
+    <div class="stat-card"><span>RIR moyen</span><strong id="statRir">—</strong></div>
     <div class="stat-card"><span>Douleur genou moyenne</span><strong id="statKnee">—</strong></div>
     <div class="stat-card"><span>Dernier poids saisi</span><strong id="statWeight">—</strong></div>
   </div>
@@ -284,10 +309,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-07-14" data-save-key="rpe__2026-07-14" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-07-14" data-save-key="rir__2026-07-14">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-07-14" data-save-key="technique__2026-07-14">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-07-14" data-save-key="knee__2026-07-14" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-07-14" data-save-key="teres__2026-07-14" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-07-14" data-save-key="notes__2026-07-14" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-07-14" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-07-15">
@@ -373,10 +419,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-07-15" data-save-key="rpe__2026-07-15" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-07-15" data-save-key="rir__2026-07-15">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-07-15" data-save-key="technique__2026-07-15">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-07-15" data-save-key="knee__2026-07-15" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-07-15" data-save-key="teres__2026-07-15" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-07-15" data-save-key="notes__2026-07-15" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-07-15" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-07-16">
@@ -446,10 +513,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-07-16" data-save-key="rpe__2026-07-16" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-07-16" data-save-key="rir__2026-07-16">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-07-16" data-save-key="technique__2026-07-16">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-07-16" data-save-key="knee__2026-07-16" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-07-16" data-save-key="teres__2026-07-16" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-07-16" data-save-key="notes__2026-07-16" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-07-16" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-07-17">
@@ -527,10 +615,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-07-17" data-save-key="rpe__2026-07-17" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-07-17" data-save-key="rir__2026-07-17">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-07-17" data-save-key="technique__2026-07-17">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-07-17" data-save-key="knee__2026-07-17" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-07-17" data-save-key="teres__2026-07-17" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-07-17" data-save-key="notes__2026-07-17" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-07-17" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-07-18">
@@ -600,10 +709,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-07-18" data-save-key="rpe__2026-07-18" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-07-18" data-save-key="rir__2026-07-18">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-07-18" data-save-key="technique__2026-07-18">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-07-18" data-save-key="knee__2026-07-18" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-07-18" data-save-key="teres__2026-07-18" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-07-18" data-save-key="notes__2026-07-18" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-07-18" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-07-19">
@@ -625,10 +755,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-07-19" data-save-key="rpe__2026-07-19" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-07-19" data-save-key="rir__2026-07-19">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-07-19" data-save-key="technique__2026-07-19">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-07-19" data-save-key="knee__2026-07-19" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-07-19" data-save-key="teres__2026-07-19" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-07-19" data-save-key="notes__2026-07-19" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-07-19" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
       <div class="review">
@@ -731,10 +882,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-07-20" data-save-key="rpe__2026-07-20" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-07-20" data-save-key="rir__2026-07-20">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-07-20" data-save-key="technique__2026-07-20">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-07-20" data-save-key="knee__2026-07-20" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-07-20" data-save-key="teres__2026-07-20" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-07-20" data-save-key="notes__2026-07-20" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-07-20" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-07-21">
@@ -804,10 +976,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-07-21" data-save-key="rpe__2026-07-21" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-07-21" data-save-key="rir__2026-07-21">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-07-21" data-save-key="technique__2026-07-21">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-07-21" data-save-key="knee__2026-07-21" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-07-21" data-save-key="teres__2026-07-21" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-07-21" data-save-key="notes__2026-07-21" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-07-21" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-07-22">
@@ -893,10 +1086,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-07-22" data-save-key="rpe__2026-07-22" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-07-22" data-save-key="rir__2026-07-22">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-07-22" data-save-key="technique__2026-07-22">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-07-22" data-save-key="knee__2026-07-22" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-07-22" data-save-key="teres__2026-07-22" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-07-22" data-save-key="notes__2026-07-22" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-07-22" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-07-23">
@@ -966,10 +1180,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-07-23" data-save-key="rpe__2026-07-23" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-07-23" data-save-key="rir__2026-07-23">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-07-23" data-save-key="technique__2026-07-23">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-07-23" data-save-key="knee__2026-07-23" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-07-23" data-save-key="teres__2026-07-23" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-07-23" data-save-key="notes__2026-07-23" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-07-23" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-07-24">
@@ -1047,10 +1282,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-07-24" data-save-key="rpe__2026-07-24" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-07-24" data-save-key="rir__2026-07-24">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-07-24" data-save-key="technique__2026-07-24">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-07-24" data-save-key="knee__2026-07-24" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-07-24" data-save-key="teres__2026-07-24" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-07-24" data-save-key="notes__2026-07-24" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-07-24" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-07-25">
@@ -1120,10 +1376,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-07-25" data-save-key="rpe__2026-07-25" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-07-25" data-save-key="rir__2026-07-25">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-07-25" data-save-key="technique__2026-07-25">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-07-25" data-save-key="knee__2026-07-25" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-07-25" data-save-key="teres__2026-07-25" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-07-25" data-save-key="notes__2026-07-25" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-07-25" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-07-26">
@@ -1145,10 +1422,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-07-26" data-save-key="rpe__2026-07-26" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-07-26" data-save-key="rir__2026-07-26">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-07-26" data-save-key="technique__2026-07-26">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-07-26" data-save-key="knee__2026-07-26" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-07-26" data-save-key="teres__2026-07-26" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-07-26" data-save-key="notes__2026-07-26" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-07-26" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
       <div class="review">
@@ -1251,10 +1549,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-07-27" data-save-key="rpe__2026-07-27" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-07-27" data-save-key="rir__2026-07-27">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-07-27" data-save-key="technique__2026-07-27">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-07-27" data-save-key="knee__2026-07-27" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-07-27" data-save-key="teres__2026-07-27" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-07-27" data-save-key="notes__2026-07-27" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-07-27" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-07-28">
@@ -1324,10 +1643,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-07-28" data-save-key="rpe__2026-07-28" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-07-28" data-save-key="rir__2026-07-28">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-07-28" data-save-key="technique__2026-07-28">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-07-28" data-save-key="knee__2026-07-28" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-07-28" data-save-key="teres__2026-07-28" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-07-28" data-save-key="notes__2026-07-28" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-07-28" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-07-29">
@@ -1413,10 +1753,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-07-29" data-save-key="rpe__2026-07-29" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-07-29" data-save-key="rir__2026-07-29">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-07-29" data-save-key="technique__2026-07-29">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-07-29" data-save-key="knee__2026-07-29" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-07-29" data-save-key="teres__2026-07-29" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-07-29" data-save-key="notes__2026-07-29" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-07-29" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-07-30">
@@ -1486,10 +1847,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-07-30" data-save-key="rpe__2026-07-30" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-07-30" data-save-key="rir__2026-07-30">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-07-30" data-save-key="technique__2026-07-30">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-07-30" data-save-key="knee__2026-07-30" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-07-30" data-save-key="teres__2026-07-30" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-07-30" data-save-key="notes__2026-07-30" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-07-30" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-07-31">
@@ -1567,10 +1949,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-07-31" data-save-key="rpe__2026-07-31" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-07-31" data-save-key="rir__2026-07-31">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-07-31" data-save-key="technique__2026-07-31">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-07-31" data-save-key="knee__2026-07-31" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-07-31" data-save-key="teres__2026-07-31" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-07-31" data-save-key="notes__2026-07-31" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-07-31" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-08-01">
@@ -1640,10 +2043,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-08-01" data-save-key="rpe__2026-08-01" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-08-01" data-save-key="rir__2026-08-01">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-08-01" data-save-key="technique__2026-08-01">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-08-01" data-save-key="knee__2026-08-01" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-08-01" data-save-key="teres__2026-08-01" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-08-01" data-save-key="notes__2026-08-01" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-08-01" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-08-02">
@@ -1665,10 +2089,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-08-02" data-save-key="rpe__2026-08-02" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-08-02" data-save-key="rir__2026-08-02">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-08-02" data-save-key="technique__2026-08-02">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-08-02" data-save-key="knee__2026-08-02" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-08-02" data-save-key="teres__2026-08-02" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-08-02" data-save-key="notes__2026-08-02" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-08-02" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
       <div class="review">
@@ -1771,10 +2216,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-08-03" data-save-key="rpe__2026-08-03" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-08-03" data-save-key="rir__2026-08-03">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-08-03" data-save-key="technique__2026-08-03">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-08-03" data-save-key="knee__2026-08-03" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-08-03" data-save-key="teres__2026-08-03" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-08-03" data-save-key="notes__2026-08-03" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-08-03" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-08-04">
@@ -1844,10 +2310,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-08-04" data-save-key="rpe__2026-08-04" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-08-04" data-save-key="rir__2026-08-04">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-08-04" data-save-key="technique__2026-08-04">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-08-04" data-save-key="knee__2026-08-04" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-08-04" data-save-key="teres__2026-08-04" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-08-04" data-save-key="notes__2026-08-04" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-08-04" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-08-05">
@@ -1933,10 +2420,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-08-05" data-save-key="rpe__2026-08-05" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-08-05" data-save-key="rir__2026-08-05">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-08-05" data-save-key="technique__2026-08-05">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-08-05" data-save-key="knee__2026-08-05" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-08-05" data-save-key="teres__2026-08-05" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-08-05" data-save-key="notes__2026-08-05" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-08-05" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-08-06">
@@ -2006,10 +2514,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-08-06" data-save-key="rpe__2026-08-06" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-08-06" data-save-key="rir__2026-08-06">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-08-06" data-save-key="technique__2026-08-06">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-08-06" data-save-key="knee__2026-08-06" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-08-06" data-save-key="teres__2026-08-06" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-08-06" data-save-key="notes__2026-08-06" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-08-06" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-08-07">
@@ -2087,10 +2616,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-08-07" data-save-key="rpe__2026-08-07" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-08-07" data-save-key="rir__2026-08-07">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-08-07" data-save-key="technique__2026-08-07">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-08-07" data-save-key="knee__2026-08-07" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-08-07" data-save-key="teres__2026-08-07" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-08-07" data-save-key="notes__2026-08-07" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-08-07" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-08-08">
@@ -2160,10 +2710,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-08-08" data-save-key="rpe__2026-08-08" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-08-08" data-save-key="rir__2026-08-08">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-08-08" data-save-key="technique__2026-08-08">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-08-08" data-save-key="knee__2026-08-08" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-08-08" data-save-key="teres__2026-08-08" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-08-08" data-save-key="notes__2026-08-08" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-08-08" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-08-09">
@@ -2185,10 +2756,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-08-09" data-save-key="rpe__2026-08-09" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-08-09" data-save-key="rir__2026-08-09">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-08-09" data-save-key="technique__2026-08-09">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-08-09" data-save-key="knee__2026-08-09" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-08-09" data-save-key="teres__2026-08-09" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-08-09" data-save-key="notes__2026-08-09" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-08-09" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
       <div class="review">
@@ -2291,10 +2883,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-08-10" data-save-key="rpe__2026-08-10" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-08-10" data-save-key="rir__2026-08-10">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-08-10" data-save-key="technique__2026-08-10">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-08-10" data-save-key="knee__2026-08-10" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-08-10" data-save-key="teres__2026-08-10" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-08-10" data-save-key="notes__2026-08-10" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-08-10" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-08-11">
@@ -2364,10 +2977,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-08-11" data-save-key="rpe__2026-08-11" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-08-11" data-save-key="rir__2026-08-11">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-08-11" data-save-key="technique__2026-08-11">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-08-11" data-save-key="knee__2026-08-11" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-08-11" data-save-key="teres__2026-08-11" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-08-11" data-save-key="notes__2026-08-11" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-08-11" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-08-12">
@@ -2453,10 +3087,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-08-12" data-save-key="rpe__2026-08-12" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-08-12" data-save-key="rir__2026-08-12">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-08-12" data-save-key="technique__2026-08-12">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-08-12" data-save-key="knee__2026-08-12" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-08-12" data-save-key="teres__2026-08-12" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-08-12" data-save-key="notes__2026-08-12" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-08-12" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-08-13">
@@ -2526,10 +3181,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-08-13" data-save-key="rpe__2026-08-13" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-08-13" data-save-key="rir__2026-08-13">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-08-13" data-save-key="technique__2026-08-13">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-08-13" data-save-key="knee__2026-08-13" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-08-13" data-save-key="teres__2026-08-13" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-08-13" data-save-key="notes__2026-08-13" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-08-13" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-08-14">
@@ -2607,10 +3283,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-08-14" data-save-key="rpe__2026-08-14" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-08-14" data-save-key="rir__2026-08-14">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-08-14" data-save-key="technique__2026-08-14">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-08-14" data-save-key="knee__2026-08-14" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-08-14" data-save-key="teres__2026-08-14" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-08-14" data-save-key="notes__2026-08-14" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-08-14" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-08-15">
@@ -2680,10 +3377,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-08-15" data-save-key="rpe__2026-08-15" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-08-15" data-save-key="rir__2026-08-15">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-08-15" data-save-key="technique__2026-08-15">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-08-15" data-save-key="knee__2026-08-15" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-08-15" data-save-key="teres__2026-08-15" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-08-15" data-save-key="notes__2026-08-15" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-08-15" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-08-16">
@@ -2705,10 +3423,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-08-16" data-save-key="rpe__2026-08-16" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-08-16" data-save-key="rir__2026-08-16">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-08-16" data-save-key="technique__2026-08-16">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-08-16" data-save-key="knee__2026-08-16" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-08-16" data-save-key="teres__2026-08-16" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-08-16" data-save-key="notes__2026-08-16" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-08-16" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
       <div class="review">
@@ -2811,10 +3550,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-08-17" data-save-key="rpe__2026-08-17" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-08-17" data-save-key="rir__2026-08-17">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-08-17" data-save-key="technique__2026-08-17">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-08-17" data-save-key="knee__2026-08-17" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-08-17" data-save-key="teres__2026-08-17" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-08-17" data-save-key="notes__2026-08-17" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-08-17" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
         <article class="day" id="2026-08-18">
@@ -2884,10 +3644,31 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
             </tr></tbody>
           </table></div>
           <div class="feedback">
-            <label>RPE séance<input id="rpe__2026-08-18" data-save-key="rpe__2026-08-18" type="number" min="1" max="10" placeholder="/10"></label>
+            <label>Répétitions encore possibles
+              <select id="rir__2026-08-18" data-save-key="rir__2026-08-18">
+                <option value="">Choisir</option>
+                <option value="4">4 ou plus</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+                <option value="0">0</option>
+              </select>
+            </label>
+            <label>Qualité technique
+              <select id="technique__2026-08-18" data-save-key="technique__2026-08-18">
+                <option value="">Choisir</option>
+                <option value="green">🟢 Propre</option>
+                <option value="yellow">🟡 Quelques compensations</option>
+                <option value="red">🔴 Technique dégradée</option>
+              </select>
+            </label>
             <label>Douleur genou<input id="knee__2026-08-18" data-save-key="knee__2026-08-18" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Grand rond<input id="teres__2026-08-18" data-save-key="teres__2026-08-18" type="number" min="0" max="10" placeholder="/10"></label>
             <label>Notes<input id="notes__2026-08-18" data-save-key="notes__2026-08-18" type="text" placeholder="Technique, fatigue, douleur…"></label>
+          </div>
+          <div class="readiness-box">
+            <strong>Décision automatique</strong>
+            <span id="decision_auto__2026-08-18" class="readiness-result">Renseigne RIR, technique et douleur.</span>
           </div>
         </article>
       <div class="review">
@@ -2926,13 +3707,13 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
 </section>
 </main>
 </div>
-<div class="footer">Volleyball Rebuild Project • Isaac Baudinet • V3</div>
+<div class="footer">Volleyball Rebuild Project • Isaac Baudinet • V4</div>
 </div>
 
 <script>
 const SUPABASE_URL = 'https://nnrltfkjwmxufpskyvin.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_1rc_fk0n_1LjVfj0jnXs5w_Se4iozls';
-const APP_VERSION = 'V3';
+const APP_VERSION = 'V4';
 const PROFILE_DATA = {"version": "V2", "updated_at": "2026-07-14", "profile": {"sex": "Homme", "height_cm": 180, "weight_kg": 91, "operational_target_kg": "87–88 au 18 août", "stated_target_kg": 82, "knee": {"diagnosis": "Syndrome fémoro-patellaire gauche", "rest_pain": 1, "stairs_pain": 0, "training_pain": 3, "next_day_pain": 1}, "teres_major": {"current_pain": 0, "pullup_tested": false}}};
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -2966,6 +3747,7 @@ function restoreFields(obj) {
   });
   loading = false;
   updateStats();
+  updateAllDecisions();
 }
 
 function syncState(text, type='ok') {
@@ -3013,7 +3795,7 @@ async function loadCloud() {
     blockClosed = Boolean(saved.block_closed);
     restoreFields(saved.fields || {});
     applyBlockState();
-  } else if (saved.version === 'V2') {
+  } else if (saved.version === 'V3' || saved.version === 'V2') {
     legacyV1 = saved.legacy_v1 || null;
     archives = Array.isArray(saved.archives) ? saved.archives : [];
     blockClosed = Boolean(saved.block_closed);
@@ -3055,6 +3837,7 @@ async function saveCloud() {
 function scheduleSave() {
   if (!currentUser || loading || blockClosed) return;
   updateStats();
+  updateAllDecisions();
   syncState('Modification…','wait');
   clearTimeout(saveTimer);
   saveTimer = setTimeout(saveCloud, 650);
@@ -3101,6 +3884,7 @@ async function init() {
   fields().forEach(el=>{el.addEventListener('input',scheduleSave);el.addEventListener('change',scheduleSave);});
   applyBlockState();
   updateStats();
+  updateAllDecisions();
   renderHistory();
 }
 
@@ -3132,7 +3916,7 @@ function currentSummary(fieldObject = collectFields()) {
   return {
     checked,
     total: checkboxEntries.length,
-    rpe_avg: avg('rpe__'),
+    rir_avg: avg('rir__'),
     knee_avg: avg('knee__'),
     latest_weight: weights.length ? weights[weights.length - 1] : null
   };
@@ -3145,9 +3929,52 @@ function formatOneDecimal(value) {
 function updateStats() {
   const summary = currentSummary();
   document.getElementById('statCompletion').textContent = `${summary.checked} / ${summary.total}`;
-  document.getElementById('statRpe').textContent = formatOneDecimal(summary.rpe_avg);
+  document.getElementById('statRir').textContent = formatOneDecimal(summary.rir_avg);
   document.getElementById('statKnee').textContent = formatOneDecimal(summary.knee_avg);
   document.getElementById('statWeight').textContent = summary.latest_weight == null ? '—' : `${summary.latest_weight.toFixed(1)} kg`;
+}
+
+
+function decisionForDate(dateKey) {
+  const rirEl = document.querySelector(`[data-save-key="rir__${dateKey}"]`);
+  const techniqueEl = document.querySelector(`[data-save-key="technique__${dateKey}"]`);
+  const kneeEl = document.querySelector(`[data-save-key="knee__${dateKey}"]`);
+  const teresEl = document.querySelector(`[data-save-key="teres__${dateKey}"]`);
+  const output = document.getElementById(`decision_auto__${dateKey}`);
+  if (!output) return;
+
+  const rir = rirEl && rirEl.value !== '' ? Number(rirEl.value) : null;
+  const technique = techniqueEl ? techniqueEl.value : '';
+  const knee = kneeEl && kneeEl.value !== '' ? Number(kneeEl.value) : null;
+  const teres = teresEl && teresEl.value !== '' ? Number(teresEl.value) : null;
+  output.className = 'readiness-result';
+
+  if (rir === null || !technique || knee === null || teres === null) {
+    output.textContent = 'Renseigne RIR, technique et douleur.';
+    return;
+  }
+  if (knee >= 4 || teres >= 1 || technique === 'red' || rir === 0) {
+    output.textContent = 'Réduire : baisse la charge ou le volume à la prochaine séance.';
+    output.classList.add('reduce');
+    return;
+  }
+  if (knee === 3 || technique === 'yellow' || rir === 1) {
+    output.textContent = 'Maintenir : garde exactement la même charge.';
+    output.classList.add('hold');
+    return;
+  }
+  if (knee <= 2 && teres === 0 && technique === 'green' && rir >= 2) {
+    output.textContent = 'Progression autorisée : applique la charge planifiée suivante.';
+    output.classList.add('good');
+    return;
+  }
+  output.textContent = 'Maintenir : données intermédiaires.';
+  output.classList.add('hold');
+}
+function updateAllDecisions() {
+  document.querySelectorAll('[data-save-key^="rir__"]').forEach(el => {
+    decisionForDate(el.dataset.saveKey.replace('rir__',''));
+  });
 }
 
 function applyBlockState() {
@@ -3249,7 +4076,7 @@ function renderHistory() {
         </header>
         <div class="archive-summary">
           <div><span>Exercices</span><strong>${s.checked || 0} / ${s.total || 0}</strong></div>
-          <div><span>RPE moyen</span><strong>${formatOneDecimal(s.rpe_avg)}</strong></div>
+          <div><span>RIR moyen</span><strong>${formatOneDecimal(s.rir_avg)}</strong></div>
           <div><span>Douleur genou</span><strong>${formatOneDecimal(s.knee_avg)}</strong></div>
           <div><span>Dernier poids</span><strong>${s.latest_weight == null ? '—' : Number(s.latest_weight).toFixed(1) + ' kg'}</strong></div>
         </div>
