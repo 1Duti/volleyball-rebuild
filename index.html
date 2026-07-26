@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Volleyball Rebuild V5.2 — Isaac</title>
+<title>Volleyball Rebuild V6 — Isaac</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--navy:#0b1830;--blue:#285ee8;--ink:#172033;--muted:#667085;--line:#dfe5ee;--bg:#f3f6fa;--white:#fff;--green:#0f7b5d;--soft:#edf3ff;--amber:#b26a00;--red:#b42318}
@@ -163,12 +163,58 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
   color:#dce7ff;font-size:.8rem;font-weight:800;letter-spacing:.08em
 }
 
+
+
+/* ===== V6 — lisibilité quotidienne, commandes tactiles et retours de sauvegarde ===== */
+.day{scroll-margin-top:14px;transition:opacity .2s ease,border-color .2s ease,box-shadow .2s ease,filter .2s ease}
+.day.is-past{background:#eef1f5;border-color:#cfd5df;box-shadow:none;opacity:.68;filter:saturate(.55)}
+.day.is-past header,.day.is-past details,.day.is-past .feedback{background:#eef1f5}
+.day.is-past .start-session-btn{background:#667085}
+.day.is-today{border:2px solid var(--blue);box-shadow:0 14px 34px rgba(40,94,232,.18);opacity:1;filter:none}
+.day.is-today header{background:linear-gradient(90deg,#edf3ff,#fff)}
+.day.is-today header h3::after{content:"Aujourd’hui";display:inline-flex;margin-left:10px;padding:4px 8px;border-radius:999px;background:var(--blue);color:#fff;font-size:.62rem;vertical-align:middle;letter-spacing:.04em}
+.day.is-future{opacity:1}
+
+.warmup-card{margin-top:10px;padding:12px 14px;border-radius:10px;background:#fff;border:1px solid var(--line)}
+.warmup-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.warmup-chip{display:inline-flex;padding:5px 9px;border-radius:999px;background:var(--soft);color:var(--blue);font-size:.72rem;font-weight:800}
+.warmup-card ol{margin:8px 0 0;padding-left:1.25rem}
+.warmup-card li{margin:6px 0}
+.warmup-rest{margin-top:12px;padding:10px 12px;border-left:4px solid var(--green);background:#edf8f3;border-radius:8px;color:#155f4b;font-size:.86rem}
+
+.actions{display:flex;justify-content:center;align-items:flex-start;gap:clamp(18px,5vw,42px);padding:18px 0 4px}
+.action-item{display:flex;flex-direction:column;align-items:center;gap:8px;width:92px;text-align:center}
+.action-circle{width:78px;height:78px;min-width:78px;min-height:78px;padding:0;border-radius:50%;display:grid;place-items:center;border:3px solid rgba(255,255,255,.2);box-shadow:0 9px 22px rgba(0,0,0,.25);touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.action-circle .action-icon{font-size:2rem;line-height:1;font-weight:900}
+.action-circle.primary-action{background:#285ee8}
+.action-circle.rest-action{background:#475467}
+.action-circle.skip-action{background:#9a3412}
+.action-circle:focus-visible{outline:4px solid #fff;outline-offset:4px}
+.action-caption{font-size:.78rem;line-height:1.15;color:#dce7ff;font-weight:800;min-height:2.3em}
+.action-circle:disabled{opacity:.34;box-shadow:none}
+
+.save-toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,22px);z-index:40000;min-width:min(360px,calc(100vw - 28px));max-width:560px;padding:13px 17px;border-radius:999px;background:#0f7b5d;color:#fff;font-weight:800;text-align:center;box-shadow:0 18px 45px rgba(0,0,0,.28);opacity:0;pointer-events:none;transition:.2s ease}
+.save-toast.visible{opacity:1;transform:translate(-50%,0)}
+.save-toast.saving{background:#b26a00}
+.save-toast.error{background:#b42318}
+.exercise-save-state{min-height:22px;margin-top:9px;color:#b9e4d4;text-align:center;font-size:.82rem;font-weight:700}
+#saveFeedbackButton{width:100%;margin-top:12px;min-height:52px;border-radius:14px;background:#0f7b5d}
+
+@media(max-width:600px){
+  .actions{gap:14px;justify-content:space-between}
+  .action-item{width:30%}
+  .action-circle{width:72px;height:72px;min-width:72px;min-height:72px}
+  .action-caption{font-size:.72rem}
+  .workout-side{order:initial}
+  .day.is-past{opacity:.58}
+}
+
 </style>
 </head>
 <body>
 <div id="authScreen" class="auth-screen">
   <div class="auth-card">
-    <span class="tag" style="color:#285ee8">VOLLEYBALL REBUILD V5.2</span>
+    <span class="tag" style="color:#285ee8">VOLLEYBALL REBUILD V6</span>
     <h2>Connexion</h2>
     <p>Utilise le même compte sur tous tes appareils.</p>
     <label>Adresse e-mail<input id="authEmail" type="email" autocomplete="email"></label>
@@ -181,7 +227,7 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
 <div class="wrap">
 <section class="hero">
   <div>
-    <span class="tag">V5.2 • 14 JUILLET → 18 AOÛT 2026</span>
+    <span class="tag">V6 • 14 JUILLET → 18 AOÛT 2026</span>
     <h1>VOLLEYBALL<br>REBUILD PROJECT</h1>
     <p>Programme recalé sur ton niveau réel au 14 juillet : 91 kg, bench à 77,5 kg, remusculation unilatérale du genou gauche et reprise progressive du tirage vertical.</p>
   </div>
@@ -3759,13 +3805,13 @@ body.block-closed main input,body.block-closed main select{background:#f2f4f7;co
 </section>
 </main>
 </div>
-<div class="footer">Volleyball Rebuild Project • Isaac Baudinet • V5.2</div>
+<div class="footer">Volleyball Rebuild Project • Isaac Baudinet • V6</div>
 </div>
 
 <script>
 const SUPABASE_URL = 'https://nnrltfkjwmxufpskyvin.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_1rc_fk0n_1LjVfj0jnXs5w_Se4iozls';
-const APP_VERSION = 'V5.2';
+const APP_VERSION = 'V6';
 const PROFILE_DATA = {"version": "V2", "updated_at": "2026-07-14", "profile": {"sex": "Homme", "height_cm": 180, "weight_kg": 91, "operational_target_kg": "87–88 au 18 août", "stated_target_kg": 82, "knee": {"diagnosis": "Syndrome fémoro-patellaire gauche", "rest_pain": 1, "stairs_pain": 0, "training_pain": 3, "next_day_pain": 1}, "teres_major": {"current_pain": 0, "pullup_tested": false}}};
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -3849,7 +3895,7 @@ async function loadCloud() {
     blockClosed = Boolean(saved.block_closed);
     restoreFields(saved.fields || {});
     applyBlockState();
-  } else if (saved.version === 'V5.1' || saved.version === 'V5' || saved.version === 'V4' || saved.version === 'V3' || saved.version === 'V2') {
+  } else if (saved.version === 'V5.2' || saved.version === 'V5.1' || saved.version === 'V5' || saved.version === 'V4' || saved.version === 'V3' || saved.version === 'V2') {
     legacyV1 = saved.legacy_v1 || null;
     archives = Array.isArray(saved.archives) ? saved.archives : [];
     blockClosed = Boolean(saved.block_closed);
@@ -4396,7 +4442,7 @@ function downloadArchive(id) {
 }
 
 function exportBackup() {
-  downloadJson('volleyball-rebuild-V3-backup.json', {
+  downloadJson('volleyball-rebuild-V6-backup.json', {
     exported_at: new Date().toISOString(),
     version: APP_VERSION,
     profile: PROFILE_DATA,
@@ -4413,8 +4459,811 @@ function goToday() {
   if(target) target.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
+
+
+/* ========================= V6 OVERRIDES ========================= */
+let timerSkippableV6 = false;
+let toastTimerV6 = null;
+let initialTodayFocusDoneV6 = false;
+
+function localISODateV6(date = new Date()) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+function showSaveToastV6(text, type = 'success', duration = 2400) {
+  const toast = document.getElementById('saveToast');
+  if (!toast) return;
+  clearTimeout(toastTimerV6);
+  toast.textContent = text;
+  toast.className = `save-toast visible ${type === 'success' ? '' : type}`.trim();
+  if (duration > 0) {
+    toastTimerV6 = setTimeout(() => toast.classList.remove('visible'), duration);
+  }
+}
+
+function savedTimeV6() {
+  return new Intl.DateTimeFormat('fr-FR', {
+    hour: '2-digit', minute: '2-digit', second: '2-digit'
+  }).format(new Date());
+}
+
+function setExerciseSaveStateV6(text, error = false) {
+  const state = document.getElementById('exerciseSaveState');
+  if (!state) return;
+  state.textContent = text;
+  state.style.color = error ? '#fda29b' : '#b9e4d4';
+}
+
+function syncWorkoutDraftV6() {
+  if (!ws) return;
+  saveExerciseFeedbackV6Only();
+  window.__sessionDrafts = window.__sessionDrafts || {};
+  window.__sessionDrafts[ws.date] = {
+    updated_at: new Date().toISOString(),
+    elapsed_seconds: Math.max(0, Math.floor((Date.now() - startedAt) / 1000)),
+    current: ws.current,
+    exercises: ws.ex.map(e => ({
+      name: e.name,
+      doneSets: e.doneSets || 0,
+      done: Boolean(e.done),
+      skipped: Boolean(e.skipped),
+      feedback: e.feedback || {}
+    }))
+  };
+}
+
+function collectFields() {
+  const out = {};
+  fields().forEach(el => {
+    out[el.dataset.saveKey] = el.type === 'checkbox' ? el.checked : el.value;
+  });
+  syncWorkoutDraftV6();
+  out.__session_history = window.__sessionHistory || {};
+  out.__session_drafts = window.__sessionDrafts || {};
+  return out;
+}
+
+function restoreFields(obj) {
+  if (!obj || typeof obj !== 'object') return;
+  window.__sessionHistory = obj.__session_history || {};
+  window.__sessionDrafts = obj.__session_drafts || {};
+  loading = true;
+  fields().forEach(el => {
+    const key = el.dataset.saveKey;
+    if (!(key in obj)) return;
+    if (el.type === 'checkbox') el.checked = Boolean(obj[key]);
+    else el.value = obj[key] ?? '';
+  });
+  loading = false;
+  updateStats();
+  updateAllDecisions();
+}
+
+async function saveCloud(options = {}) {
+  if (!currentUser || loading) return;
+  const message = options.message || 'Données enregistrées';
+  syncState('Sauvegarde…', 'wait');
+  if (!options.silent) showSaveToastV6('Enregistrement en cours…', 'saving', 0);
+  const payload = {
+    version: APP_VERSION,
+    profile: PROFILE_DATA,
+    fields: collectFields(),
+    archives,
+    block_closed: blockClosed,
+    legacy_v1: legacyV1,
+    updated_at: new Date().toISOString()
+  };
+  const { error } = await supabaseClient
+    .from('training_data')
+    .upsert({user_id: currentUser.id, form_data: payload, updated_at: new Date().toISOString()}, {onConflict: 'user_id'});
+  if (error) {
+    console.error(error);
+    syncState('Erreur sauvegarde', 'error');
+    showSaveToastV6('Échec de la sauvegarde — vérifie ta connexion', 'error', 4200);
+    setExerciseSaveStateV6('Échec de la sauvegarde', true);
+    return false;
+  }
+  const time = savedTimeV6();
+  syncState(`Synchronisé • ${time}`, 'ok');
+  if (!options.silent) showSaveToastV6(`✓ ${message} • ${time}`, 'success', 2500);
+  setExerciseSaveStateV6(`✓ Enregistré à ${time}`);
+  return true;
+}
+
+function scheduleSave() {
+  if (!currentUser || loading || blockClosed) return;
+  updateStats();
+  updateAllDecisions();
+  syncWorkoutDraftV6();
+  syncState('Modification…', 'wait');
+  setExerciseSaveStateV6('Modification en attente de sauvegarde…');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => saveCloud({message: 'Sauvegarde automatique effectuée'}), 650);
+}
+
+async function saveNow() {
+  await saveCloud({message: 'Sauvegarde manuelle confirmée'});
+}
+
+function markSessionDatesV6() {
+  const today = localISODateV6();
+  document.querySelectorAll('article.day[id]').forEach(day => {
+    const date = day.id;
+    day.classList.remove('is-past', 'is-today', 'is-future');
+    if (date < today) day.classList.add('is-past');
+    else if (date === today) {
+      day.classList.add('is-today');
+      day.setAttribute('aria-current', 'date');
+      const warmup = day.querySelector('details');
+      if (warmup) warmup.open = true;
+    } else day.classList.add('is-future');
+  });
+}
+
+function todayTargetV6() {
+  const days = [...document.querySelectorAll('article.day[id]')].sort((a, b) => a.id.localeCompare(b.id));
+  const today = localISODateV6();
+  return document.getElementById(today) || days.find(day => day.id > today) || days.at(-1) || null;
+}
+
+function focusTodayV6(smooth = false) {
+  const target = todayTargetV6();
+  if (!target) return;
+  target.scrollIntoView({behavior: smooth ? 'smooth' : 'auto', block: 'start'});
+}
+
+function goToday() {
+  focusTodayV6(true);
+}
+
+const WARMUPS_V6 = {
+  upperStrength: {
+    title: 'Échauffement spécifique — force haut du corps', duration: '10–12 min',
+    rest: 'Mobilité et activation : enchaîne sans pause formelle, avec 20–30 s seulement pour changer de matériel. Montées en charge : 60–90 s entre les séries.',
+    items: [
+      'Cercles d’épaules : 10 vers l’avant + 10 vers l’arrière.',
+      'Rotations thoraciques : 8 par côté.',
+      'Dislocations à l’élastique : 12 répétitions contrôlées.',
+      'Scapular push-ups : 2×10.',
+      'Tirage élastique + rotation externe : 12 + 12 répétitions.',
+      'Montée en charge du mouvement principal : barre à vide ×12, environ 50 % ×8, 70 % ×4, puis 80 % ×2.'
+    ]
+  },
+  upperVolume: {
+    title: 'Échauffement spécifique — volume haut du corps', duration: '8–10 min',
+    rest: 'Enchaîne la mobilité sans pause. Prends 30 s entre les activations et 45–75 s entre les séries de montée en charge.',
+    items: [
+      'Cercles de bras : 10 petits + 10 grands dans chaque sens.',
+      'Rotation thoracique à quatre pattes : 8 par côté.',
+      'Band pull-aparts : 2×12.',
+      'Rotation externe à l’élastique, coude au corps : 2×10 par côté.',
+      'Scapular push-ups : 10 répétitions.',
+      'Une série très légère de tirage horizontal ×15, puis 2–3 séries progressives sur le premier développé.'
+    ]
+  },
+  upperPower: {
+    title: 'Échauffement spécifique — vitesse et explosivité', duration: '10–12 min',
+    rest: 'Mobilité : sans repos. Activation explosive : 30–45 s. Montées en charge rapides : 45–60 s pour rester frais.',
+    items: [
+      'Cercles d’épaules et poignets : 10 par sens.',
+      'Band pull-aparts : 15 répétitions.',
+      'Scapular push-ups : 2×8.',
+      'Pompes explosives contre un mur ou un support haut : 2×5, sans douleur.',
+      'Développé à la barre vide : 2×8, vitesse maximale mais contrôle total.',
+      'Deux à trois séries progressives de 3 répétitions avant la charge de travail.'
+    ]
+  },
+  lowerQuad: {
+    title: 'Échauffement spécifique — quadriceps et genou', duration: '10–12 min',
+    rest: 'Mobilité : sans pause formelle. Activation : 20–30 s. Montées en charge : 45–60 s, sans dépasser 2/10 de douleur.',
+    items: [
+      'Vélo très facile : 4 minutes.',
+      'Mobilité de cheville genou-vers-mur : 10 par côté.',
+      'Extension terminale du genou à l’élastique : 2×12 par jambe avec maintien de 2 s.',
+      'Pont fessier : 2×12.',
+      'Demi-squat au poids du corps sur banc : 2×8, amplitude validée.',
+      'Leg extension : 2–3 séries progressives par jambe, 12 répétitions légères puis 8 et 5 plus proches de la charge de travail.'
+    ]
+  },
+  lowerPosterior: {
+    title: 'Échauffement spécifique — chaîne postérieure', duration: '10–12 min',
+    rest: 'Mobilité : sans pause. Activation : 30 s entre les séries. Montée en charge du hip thrust : 60 s.',
+    items: [
+      'Vélo facile : 4 minutes.',
+      'Cercles de hanches : 10 par côté.',
+      'Balancements de jambe avant/arrière : 10 par côté.',
+      'Pont fessier avec maintien de 2 s : 2×10.',
+      'Hamstring walkouts : 2×6 pas contrôlés.',
+      'Charnière de hanche sans charge : 10 répétitions.',
+      'Hip thrust : 3 séries progressives de 10, 6 puis 4 répétitions.'
+    ]
+  },
+  lowerMixed: {
+    title: 'Échauffement spécifique — jambes et charnière de hanche', duration: '10–12 min',
+    rest: 'Enchaîne la mobilité. Prends 30 s entre les activations et 45–60 s entre les montées en charge.',
+    items: [
+      'Vélo facile : 4 minutes.',
+      'Mobilité de cheville : 10 par côté.',
+      'Cercles de hanches : 10 par côté.',
+      'Pont fessier : 12 répétitions avec maintien de 2 s.',
+      'Charnière de hanche au poids du corps : 2×8.',
+      'Demi-squat sur banc au poids du corps : 2×8.',
+      'Deux séries progressives sur le premier exercice, puis une série légère de soulevé de terre roumain.'
+    ]
+  },
+  recovery: {
+    title: 'Mise en route récupération — mobilité douce', duration: '10–15 min',
+    rest: 'Aucun temps de repos imposé : enchaîne lentement et arrête tout mouvement qui augmente la douleur.',
+    items: [
+      'Marche facile ou respiration diaphragmatique : 3 minutes.',
+      'Cat-cow : 8 répétitions lentes.',
+      'Rotations thoraciques : 8 par côté.',
+      'Mobilité 90/90 des hanches : 8 transitions.',
+      'Mobilité de cheville : 10 par côté.',
+      'Étirements dynamiques légers des mollets et fléchisseurs de hanche : 30 s par côté.'
+    ]
+  }
+};
+
+function warmupTypeV6(day) {
+  const type = (day.querySelector('header b')?.textContent || '').toUpperCase();
+  const names = [...day.querySelectorAll('tbody strong')].map(el => el.textContent.toLowerCase()).join(' | ');
+  if (type.includes('RÉCUP')) return 'recovery';
+  if (type.includes('HAUT')) {
+    if (names.includes('bench dynamique')) return 'upperPower';
+    if (names.includes('développé couché')) return 'upperStrength';
+    return 'upperVolume';
+  }
+  if (names.includes('soulevé de terre roumain')) return 'lowerMixed';
+  if (names.startsWith('hip thrust') || names.includes('leg curl assis')) return 'lowerPosterior';
+  return 'lowerQuad';
+}
+
+function configureWarmupsV6() {
+  document.querySelectorAll('article.day[id]').forEach(day => {
+    const details = day.querySelector('details');
+    if (!details) return;
+    const plan = WARMUPS_V6[warmupTypeV6(day)];
+    details.innerHTML = `
+      <summary>${plan.title}</summary>
+      <div class="warmup-card">
+        <div class="warmup-meta"><span class="warmup-chip">Durée : ${plan.duration}</span><span class="warmup-chip">Spécifique à la séance</span></div>
+        <ol>${plan.items.map(item => `<li>${item}</li>`).join('')}</ol>
+        <div class="warmup-rest"><strong>Temps de pause :</strong> ${plan.rest}</div>
+      </div>`;
+  });
+}
+
+function parseTempoV6(value) {
+  const normalized = String(value || '').trim().replaceAll('–', '-').replaceAll('—', '-').replaceAll(',', '.');
+  const match = normalized.match(/^(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?|x)$/i);
+  if (!match) return null;
+  const raw = [match[1], match[2], match[3]];
+  const labels = ['MOUVEMENT', 'MAINTIENS', raw[2].toLowerCase() === 'x' ? 'EXPLOSIF' : 'RETOUR'];
+  return raw.map((item, index) => ({
+    seconds: item.toLowerCase() === 'x' ? 0.8 : Number(item),
+    label: labels[index]
+  })).filter(phase => phase.seconds > 0);
+}
+
+function inferSetsV6(text) {
+  const source = String(text || '');
+  let match = source.match(/(\d+)\s*[×x]\s*(\d+)/i);
+  if (match) return Number(match[1]);
+  match = source.match(/(\d+)\s*séries?/i);
+  return match ? Number(match[1]) : 1;
+}
+
+function inferRepsV6(text) {
+  const source = String(text || '');
+  const match = source.match(/(\d+)\s*[×x]\s*(\d+)/i);
+  return match ? Number(match[2]) : 1;
+}
+
+function detectPerSideV6(name, load) {
+  const source = `${name} ${load}`.toLowerCase();
+  return /unilat|\/jambe|par jambe|\/côté|par côté|gauche\s*\/|gauche.*droite/.test(source);
+}
+
+function sideLabelsV6(name) {
+  const source = String(name).toLowerCase();
+  if (/jambe|leg |presse|mollet|hip thrust|squat/.test(source)) return ['JAMBE GAUCHE', 'JAMBE DROITE'];
+  if (/bras|landmine|curl|triceps/.test(source)) return ['BRAS GAUCHE', 'BRAS DROIT'];
+  return ['CÔTÉ GAUCHE', 'CÔTÉ DROIT'];
+}
+
+function inferEffortsV6(text) {
+  const source = String(text || '').toLowerCase();
+  const match = source.match(/[×x]\s*(\d+)\s*(?:efforts?|maintiens?)/i);
+  return match ? Number(match[1]) : 3;
+}
+
+function isoEffortSecondsV6(text) {
+  const source = String(text || '').replaceAll('–', '-');
+  const range = source.match(/(\d+)\s*-\s*(\d+)\s*s/i);
+  if (range) return Number(range[2]);
+  const single = source.match(/(\d+)\s*s/i);
+  return single ? Number(single[1]) : 5;
+}
+
+function isoShortRestV6(text) {
+  const match = String(text || '').match(/(\d+)\s*s\s*entre\s*(?:les\s*)?(?:efforts?|maintiens?)/i);
+  return match ? Number(match[1]) : 3;
+}
+
+function restSeconds(t) {
+  const source = String(t || '').toLowerCase().replaceAll(',', '.').replaceAll('–', '-').trim();
+  if (!source || source === '—' || source === '-') return 0;
+  const betweenSets = source.match(/(\d+(?:\.\d+)?)\s*s\s*entre\s*(?:les\s*)?séries/i);
+  if (betweenSets) return Math.round(Number(betweenSets[1]));
+  const minute = source.match(/(\d+(?:\.\d+)?)\s*min/i);
+  if (minute) return Math.round(Number(minute[1]) * 60);
+  const range = source.match(/(\d+)\s*-\s*(\d+)\s*s/i);
+  if (range) return Math.round((Number(range[1]) + Number(range[2])) / 2);
+  const seconds = [...source.matchAll(/(\d+(?:\.\d+)?)\s*s/gi)].map(match => Number(match[1]));
+  return seconds.length ? Math.max(...seconds) : 60;
+}
+
+function selectedPrescriptionV6(load, date) {
+  const matches = [...String(load || '').matchAll(/(\d+)\s*[×x]\s*(\d+)/gi)];
+  if (!matches.length) return {sets: 1, reps: 1};
+  const hasWeekOneAlternative = /\(S1\)/i.test(load) && /puis/i.test(load);
+  const chosen = hasWeekOneAlternative && date > '2026-07-19' ? matches.at(-1) : matches[0];
+  return {sets: Number(chosen[1]), reps: Number(chosen[2])};
+}
+
+function readExercises(date) {
+  const day = document.getElementById(date);
+  if (!day) return [];
+  return [...day.querySelectorAll('tbody tr')].map((row, index) => {
+    const cells = row.querySelectorAll('td');
+    const checkbox = cells[5]?.querySelector('input');
+    const name = cells[0]?.querySelector('strong')?.textContent.trim() || `Exercice ${index + 1}`;
+    const load = cells[1]?.textContent.trim() || '—';
+    const tempo = cells[2]?.textContent.trim() || '—';
+    const perSide = detectPerSideV6(name, load);
+    const isIso = /\b(?:pima|ima)\b/i.test(name);
+    const prescription = selectedPrescriptionV6(load, date);
+    return {
+      i: index,
+      name,
+      note: cells[0]?.querySelector('small')?.textContent.trim() || '',
+      load,
+      tempo,
+      rest: cells[3]?.textContent.trim() || '—',
+      effort: cells[4]?.textContent.trim() || '—',
+      key: checkbox?.dataset.saveKey || null,
+      sets: prescription.sets,
+      reps: prescription.reps,
+      perSide,
+      sideLabels: perSide ? sideLabelsV6(name) : [''],
+      tempoPhases: parseTempoV6(tempo),
+      guidedTempo: Boolean(parseTempoV6(tempo)),
+      isIso,
+      effortsPerSet: isIso ? inferEffortsV6(load) : 0,
+      isoEffortSeconds: isIso ? isoEffortSecondsV6(load) : 0,
+      isoShortRest: isIso ? isoShortRestV6(cells[3]?.textContent) : 0,
+      doneSets: 0,
+      done: Boolean(checkbox?.checked),
+      skipped: false,
+      feedback: {}
+    };
+  });
+}
+
+function mergeWorkoutDraftV6(exercises, draft) {
+  if (!draft || !Array.isArray(draft.exercises)) return exercises;
+  exercises.forEach((exercise, index) => {
+    const previous = draft.exercises[index];
+    if (!previous || previous.name !== exercise.name) return;
+    exercise.doneSets = Math.min(exercise.sets, Number(previous.doneSets) || 0);
+    exercise.done = Boolean(previous.done);
+    exercise.skipped = Boolean(previous.skipped);
+    exercise.feedback = previous.feedback || {};
+  });
+  return exercises;
+}
+
+function startWorkout(date) {
+  let exercises = readExercises(date);
+  if (!exercises.length) return alert('Aucun exercice trouvé.');
+  const draft = (window.__sessionDrafts || {})[date];
+  exercises = mergeWorkoutDraftV6(exercises, draft);
+  ws = {
+    date,
+    ex: exercises,
+    current: Math.min(Number(draft?.current) || 0, exercises.length - 1)
+  };
+  startedAt = Date.now() - ((Number(draft?.elapsed_seconds) || 0) * 1000);
+  document.getElementById('workoutOverlay').classList.remove('hidden-workout');
+  document.body.style.overflow = 'hidden';
+  const day = document.getElementById(date);
+  document.getElementById('workoutDate').textContent = day.querySelector('h3')?.textContent || date;
+  document.getElementById('workoutType').textContent = day.querySelector('header b')?.textContent || '';
+  clearInterval(elapsedId);
+  elapsedId = setInterval(() => {
+    document.getElementById('elapsed').textContent = fmt(Math.floor((Date.now() - startedAt) / 1000));
+  }, 1000);
+  setExerciseSaveStateV6(draft ? 'Séance précédente restaurée' : 'Les retours sont sauvegardés automatiquement');
+  renderWorkout();
+}
+
+function doneSetButtonV6() { return document.getElementById('doneSet'); }
+function skipRestButtonV6() { return document.getElementById('skipRestButton'); }
+
+function setPrimaryActionV6(caption, icon = '✓') {
+  const button = doneSetButtonV6();
+  const captionEl = document.getElementById('doneSetCaption');
+  const iconEl = document.getElementById('doneSetIcon');
+  if (captionEl) captionEl.textContent = caption;
+  if (iconEl) iconEl.textContent = icon;
+  if (button) {
+    button.title = caption;
+    button.setAttribute('aria-label', caption);
+  }
+}
+
+function setSkipActionV6(caption = 'Passer le repos') {
+  const captionEl = document.getElementById('skipRestCaption');
+  const button = skipRestButtonV6();
+  if (captionEl) captionEl.textContent = caption;
+  if (button) {
+    button.title = caption;
+    button.setAttribute('aria-label', caption);
+  }
+}
+
+function renderWorkout() {
+  const exercise = ws.ex[ws.current];
+  exerciseCounter.textContent = `Exercice ${ws.current + 1} / ${ws.ex.length}`;
+  exerciseName.textContent = exercise.name;
+  exerciseLoad.textContent = exercise.load;
+  exerciseTempo.textContent = exercise.tempo;
+  exerciseRest.textContent = exercise.rest;
+  exerciseEffort.textContent = exercise.effort;
+  exerciseNote.textContent = exercise.note;
+  timerDisplay.textContent = '0.0';
+  timerLabel.textContent = 'PRÊT';
+  timerBar.style.width = '0%';
+  updatePhaseVisual('PRÊT');
+  setupVisualTimer();
+  timerSkippableV6 = false;
+  const primary = doneSetButtonV6();
+  const skip = skipRestButtonV6();
+  primary.disabled = Boolean(exercise.done || exercise.skipped);
+  skip.disabled = true;
+  setSkipActionV6('Passer le repos');
+  if (exercise.isIso) setPrimaryActionV6(`Démarrer ${exercise.effortsPerSet} maintiens`, '▶');
+  else if (exercise.guidedTempo) setPrimaryActionV6('Démarrer la série guidée', '▶');
+  else setPrimaryActionV6('Série terminée', '✓');
+  if (exercise.done) setPrimaryActionV6('Exercice terminé', '✓');
+  if (exercise.skipped) setPrimaryActionV6('Exercice passé', '↷');
+
+  setDots.innerHTML = '';
+  for (let i = 0; i < exercise.sets; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'dot ' + (i < exercise.doneSets ? 'done' : i === exercise.doneSets ? 'active' : '');
+    dot.textContent = i + 1;
+    setDots.appendChild(dot);
+  }
+
+  exerciseList.innerHTML = '';
+  ws.ex.forEach((item, index) => {
+    const button = document.createElement('button');
+    button.textContent = `${index + 1}. ${item.name}`;
+    if (index === ws.current) button.classList.add('active');
+    if (item.done || item.skipped || item.doneSets >= item.sets) button.classList.add('done');
+    button.onclick = () => {
+      saveExerciseFeedbackV6Only();
+      syncWorkoutDraftV6();
+      scheduleSave();
+      stopTimer();
+      ws.current = index;
+      renderWorkout();
+    };
+    exerciseList.appendChild(button);
+  });
+  const completed = ws.ex.filter(item => item.done || item.skipped || item.doneSets >= item.sets).length;
+  sessionBar.style.width = `${Math.round(completed / ws.ex.length * 100)}%`;
+  loadFeedback();
+}
+
+function phaseClass(label) {
+  const normalized = String(label).toUpperCase();
+  if (normalized.includes('MOUVEMENT') || normalized.includes('MONTE')) return 'phase-up';
+  if (normalized.includes('MAINTIENS') || normalized.includes('HOLD')) return 'phase-hold';
+  if (normalized.includes('RETOUR') || normalized.includes('DESCENDS')) return 'phase-down';
+  if (normalized.includes('REPOS') || normalized.includes('CHANGE')) return 'phase-rest';
+  if (normalized.includes('POUSSE') || normalized.includes('MAX') || normalized.includes('EXPLOSIF')) return 'phase-max';
+  return 'phase-ready';
+}
+
+function setReadyV6(label = 'PRÊT POUR LA SUITE') {
+  const primary = doneSetButtonV6();
+  const skip = skipRestButtonV6();
+  primary.disabled = false;
+  skip.disabled = true;
+  timerSkippableV6 = false;
+  timerLabel.textContent = label;
+  updatePhaseVisual(label);
+  timerDisplay.textContent = '0.0';
+  timerBar.style.width = '0%';
+  setSkipActionV6('Passer le repos');
+}
+
+function countdown(sec, label, done, options = {}) {
+  stopTimer();
+  totalTimer = Math.max(0.1, Number(sec) || 0.1);
+  remain = totalTimer;
+  timerDoneCallback = done || null;
+  timerSkippableV6 = Boolean(options.skippable);
+  timerStartedAt = performance.now();
+  timerEndAt = timerStartedAt + totalTimer * 1000;
+  timerLabel.textContent = label;
+  updatePhaseVisual(label);
+  const primary = doneSetButtonV6();
+  const skip = skipRestButtonV6();
+  primary.disabled = true;
+  skip.disabled = !timerSkippableV6;
+  setSkipActionV6(options.skipCaption || 'Passer le repos');
+  drawTimerHighRes();
+  timerId = requestAnimationFrame(now => tickTimerV6(now, options));
+}
+
+function tickTimerV6(now, options = {}) {
+  const remainingMs = Math.max(0, timerEndAt - now);
+  remain = remainingMs / 1000;
+  drawTimerHighRes();
+  if (remainingMs <= 0) {
+    stopTimer(false);
+    if (options.beep !== false) beep();
+    const callback = timerDoneCallback;
+    timerDoneCallback = null;
+    timerSkippableV6 = false;
+    if (callback) callback();
+    else setReadyV6();
+    return;
+  }
+  timerId = requestAnimationFrame(next => tickTimerV6(next, options));
+}
+
+function skipRest() {
+  if (!timerSkippableV6) return;
+  const callback = timerDoneCallback;
+  stopTimer(false);
+  timerDoneCallback = null;
+  timerSkippableV6 = false;
+  remain = 0;
+  drawTimerHighRes();
+  timerDisplay.textContent = '0.0';
+  timerLabel.textContent = 'TEMPS PASSÉ';
+  updatePhaseVisual('TEMPS PASSÉ');
+  skipRestButtonV6().disabled = true;
+  if (callback) setTimeout(callback, 40);
+  else setReadyV6();
+}
+
+function runPhaseSequenceV6(phases, done) {
+  const queue = [...phases];
+  const next = () => {
+    if (!queue.length) return done();
+    const current = queue.shift();
+    transitionCue();
+    countdown(current.seconds, current.label, next, {skippable: false, beep: false});
+  };
+  next();
+}
+
+function registerCompletedSetV6(exercise) {
+  exercise.doneSets = Math.min(exercise.sets, (exercise.doneSets || 0) + 1);
+  if (exercise.doneSets >= exercise.sets) {
+    exercise.done = true;
+    if (exercise.key) {
+      const checkbox = document.querySelector(`[data-save-key="${exercise.key}"]`);
+      if (checkbox) checkbox.checked = true;
+    }
+    syncWorkoutDraftV6();
+    scheduleSave();
+    renderWorkout();
+    timerLabel.textContent = 'EXERCICE TERMINÉ';
+    updatePhaseVisual('EXERCICE TERMINÉ');
+    beep();
+    return setTimeout(nextExercise, 650);
+  }
+
+  syncWorkoutDraftV6();
+  scheduleSave();
+  renderWorkout();
+  const rest = restSeconds(exercise.rest);
+  if (rest > 0) {
+    countdown(rest, `REPOS • SÉRIE ${exercise.doneSets} / ${exercise.sets}`, () => {
+      setReadyV6(`PRÊT • SÉRIE ${exercise.doneSets + 1} / ${exercise.sets}`);
+    }, {skippable: true, skipCaption: 'Passer le repos'});
+  } else {
+    setReadyV6(`PRÊT • SÉRIE ${exercise.doneSets + 1} / ${exercise.sets}`);
+  }
+}
+
+function runGuidedSetV6(exercise) {
+  const sideNames = exercise.perSide ? exercise.sideLabels : [''];
+  let sideIndex = 0;
+  let rep = 1;
+  const repsPerSide = Math.max(1, exercise.reps || 1);
+  const totalReps = repsPerSide * sideNames.length;
+
+  const runRep = () => {
+    if (rep > repsPerSide) {
+      if (sideIndex < sideNames.length - 1) {
+        return countdown(5, `CHANGE DE CÔTÉ • ${sideNames[sideIndex + 1]}`, () => {
+          sideIndex += 1;
+          rep = 1;
+          runRep();
+        }, {skippable: true, skipCaption: 'Continuer maintenant'});
+      }
+      return registerCompletedSetV6(exercise);
+    }
+
+    const overallRep = sideIndex * repsPerSide + rep;
+    const sidePrefix = sideNames[sideIndex] ? `${sideNames[sideIndex]} • ` : '';
+    const phases = exercise.tempoPhases.map(phase => ({
+      seconds: phase.seconds,
+      label: `${sidePrefix}REP ${rep}/${repsPerSide} • TOTAL ${overallRep}/${totalReps} • ${phase.label}`
+    }));
+    runPhaseSequenceV6(phases, () => {
+      rep += 1;
+      runRep();
+    });
+  };
+  runRep();
+}
+
+function runIsoSetV6(exercise) {
+  let effortIndex = 1;
+  const totalEfforts = Math.max(1, exercise.effortsPerSet || 3);
+  const runEffort = () => {
+    transitionCue();
+    countdown(exercise.isoEffortSeconds || 5,
+      `SÉRIE ${exercise.doneSets + 1}/${exercise.sets} • MAINTIEN ${effortIndex}/${totalEfforts} • POUSSE`,
+      () => {
+        if (effortIndex >= totalEfforts) return registerCompletedSetV6(exercise);
+        countdown(exercise.isoShortRest || 3,
+          `REPOS COURT • MAINTIEN ${effortIndex}/${totalEfforts}`,
+          () => {
+            effortIndex += 1;
+            runEffort();
+          },
+          {skippable: true, skipCaption: 'Passer les 3 s'}
+        );
+      },
+      {skippable: false}
+    );
+  };
+  runEffort();
+}
+
+function completeSet() {
+  const exercise = ws.ex[ws.current];
+  if (exercise.done || exercise.skipped) return;
+  const primary = doneSetButtonV6();
+  primary.disabled = true;
+  skipRestButtonV6().disabled = true;
+  if (exercise.isIso) return runIsoSetV6(exercise);
+  if (exercise.guidedTempo) return runGuidedSetV6(exercise);
+  registerCompletedSetV6(exercise);
+}
+
+function saveExerciseFeedbackV6Only() {
+  if (!ws) return;
+  ws.ex[ws.current].feedback = {
+    rir: wRir.value,
+    tech: wTech.value,
+    knee: wKnee.value,
+    teres: wTeres.value,
+    notes: wNotes.value
+  };
+}
+
+async function saveExerciseFeedback(explicit = false) {
+  saveExerciseFeedbackV6Only();
+  syncWorkoutDraftV6();
+  if (explicit) {
+    setExerciseSaveStateV6('Enregistrement du retour…');
+    await saveCloud({message: 'Retour exercice enregistré'});
+  }
+}
+
+function nextExercise() {
+  stopTimer();
+  saveExerciseFeedbackV6Only();
+  syncWorkoutDraftV6();
+  if (ws.current < ws.ex.length - 1) {
+    ws.current += 1;
+    scheduleSave();
+    renderWorkout();
+  } else finishWorkout();
+}
+
+function skipExercise() {
+  if (!confirm('Passer cet exercice ?')) return;
+  ws.ex[ws.current].skipped = true;
+  syncWorkoutDraftV6();
+  scheduleSave();
+  nextExercise();
+}
+
+async function finishWorkout() {
+  saveExerciseFeedbackV6Only();
+  stopTimer();
+  clearInterval(elapsedId);
+  const date = ws.date;
+  const first = ws.ex.find(item => item.feedback.rir !== '') || ws.ex[0];
+  const map = {
+    [`rir__${date}`]: first.feedback.rir || '',
+    [`technique__${date}`]: first.feedback.tech || '',
+    [`knee__${date}`]: first.feedback.knee || '',
+    [`teres__${date}`]: first.feedback.teres || '',
+    [`notes__${date}`]: ws.ex.map(item => item.feedback.notes ? `${item.name}: ${item.feedback.notes}` : '').filter(Boolean).join(' | ')
+  };
+  Object.entries(map).forEach(([key, value]) => {
+    const element = document.querySelector(`[data-save-key="${key}"]`);
+    if (element) element.value = value;
+  });
+  window.__sessionHistory = window.__sessionHistory || {};
+  window.__sessionHistory[`session_history__${date}`] = {
+    started_at: new Date(startedAt).toISOString(),
+    finished_at: new Date().toISOString(),
+    duration_seconds: Math.floor((Date.now() - startedAt) / 1000),
+    exercises: ws.ex
+  };
+  window.__sessionDrafts = window.__sessionDrafts || {};
+  delete window.__sessionDrafts[date];
+  ws = null;
+  updateStats();
+  updateAllDecisions();
+  const duration = fmt(Math.floor((Date.now() - startedAt) / 1000));
+  await saveCloud({message: `Séance terminée et sauvegardée • ${duration}`});
+  alert(`Séance terminée en ${duration}. Toutes les données ont été sauvegardées.`);
+  closeWorkout();
+}
+
+async function exitWorkout() {
+  if (!confirm('Quitter la séance ? La progression et les retours seront sauvegardés.')) return;
+  saveExerciseFeedbackV6Only();
+  syncWorkoutDraftV6();
+  await saveCloud({message: 'Progression de séance sauvegardée'});
+  closeWorkout();
+}
+
+async function init() {
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  configureWarmupsV6();
+  markSessionDatesV6();
+  setupVisualTimer();
+  const {data} = await supabaseClient.auth.getSession();
+  await handleSession(data.session);
+  supabaseClient.auth.onAuthStateChange(async (_event, session) => handleSession(session));
+  fields().forEach(el => {
+    el.addEventListener('input', scheduleSave);
+    el.addEventListener('change', scheduleSave);
+  });
+  applyBlockState();
+  updateStats();
+  updateAllDecisions();
+  renderHistory();
+  if (!initialTodayFocusDoneV6) {
+    initialTodayFocusDoneV6 = true;
+    requestAnimationFrame(() => setTimeout(() => focusTodayV6(false), 80));
+  }
+}
+
+
 window.addEventListener('DOMContentLoaded', init);
 </script>
+
+<div id="saveToast" class="save-toast" role="status" aria-live="polite"></div>
 
 <div id="historyModal" class="modal-backdrop hidden" onclick="modalBackdropClick(event)">
   <div class="modal-card">
@@ -4458,10 +5307,19 @@ window.addEventListener('DOMContentLoaded', init);
       </div>
     </div>
     <div class="bar"><span id="timerBar"></span></div>
-    <div class="actions">
-     <button id="doneSet" onclick="completeSet()">Série terminée</button>
-     <button id="skipRest" onclick="skipRest()" disabled>Passer le repos</button>
-     <button onclick="skipExercise()">Passer l’exercice</button>
+    <div class="actions" aria-label="Commandes de séance">
+      <div class="action-item">
+        <button id="doneSet" class="action-circle primary-action" onclick="completeSet()" aria-label="Série terminée" title="Série terminée"><span id="doneSetIcon" class="action-icon">✓</span></button>
+        <span id="doneSetCaption" class="action-caption">Série terminée</span>
+      </div>
+      <div class="action-item">
+        <button id="skipRestButton" class="action-circle rest-action" onclick="skipRest()" aria-label="Passer le repos" title="Passer le repos" disabled><span class="action-icon">⏭</span></button>
+        <span id="skipRestCaption" class="action-caption">Passer le repos</span>
+      </div>
+      <div class="action-item">
+        <button id="skipExerciseButton" class="action-circle skip-action" onclick="skipExercise()" aria-label="Passer l’exercice" title="Passer l’exercice"><span class="action-icon">↷</span></button>
+        <span class="action-caption">Passer l’exercice</span>
+      </div>
     </div>
    </div>
   </section>
@@ -4475,7 +5333,8 @@ window.addEventListener('DOMContentLoaded', init);
     <label>Grand rond<input id="wTeres" type="number" min="0" max="10"></label>
    </div>
    <label>Notes<input id="wNotes" type="text"></label>
-   <button style="width:100%;margin-top:12px" onclick="saveExerciseFeedback()">Enregistrer le retour</button>
+   <button id="saveFeedbackButton" onclick="saveExerciseFeedback(true)">Enregistrer le retour</button>
+   <div id="exerciseSaveState" class="exercise-save-state" aria-live="polite"></div>
   </aside>
  </div>
 </div>
