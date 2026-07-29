@@ -90,6 +90,94 @@ body.workout-open{overflow:hidden}
 @media(max-width:760px){.analytics-grid,.precheck-grid{grid-template-columns:1fr}.chart-wrap{height:220px}.set-editor-grid{grid-template-columns:1fr 1fr}.utility-actions{grid-template-columns:repeat(2,1fr)}.precheck-actions{grid-template-columns:1fr}.workout-side{padding-bottom:calc(125px + env(safe-area-inset-bottom))}}
 @media(max-width:390px){.set-editor-grid{grid-template-columns:1fr}.utility-actions{grid-template-columns:1fr 1fr}.range-control{align-items:stretch;flex-direction:column}.range-control select{width:100%}}
 
+
+/* ===== V8.1 — Correctif largeur téléphone ===== */
+:where(.wrap,.layout,main,nav,.panel,.week,.weektitle,.day,.day header,.day-meta,.day-summary,details,.warmup-list,.warmup-item,.feedback,.readiness-box,.toolbar,.userbar,.modal-card,.auth-card,.workout-main,.workout-stage,.workout-side,.prescription,.set-editor,.set-editor-grid,.set-history,.set-history-item,.utility-actions,.workout-settings,.precheck-grid,.analytics-grid,.chart-card,.chart-controls){min-width:0;max-width:100%}
+img,svg,canvas{max-width:100%}
+button,input,select,textarea{min-width:0;max-width:100%}
+.scroll{width:100%;max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+.modal-card,.auth-card{min-width:0;overflow-x:hidden}
+.start-session-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.start-session-btn .start-label{display:none;font-size:.9rem;font-weight:900}
+
+@media(max-width:760px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden}
+  .wrap{width:100%;max-width:100%;padding:7px;overflow-x:hidden}
+  .layout{display:block;width:100%;max-width:100%}
+  main,.panel,.week,.day{width:100%;max-width:100%;min-width:0}
+  .hero{width:100%;max-width:100%;padding:22px 16px;overflow:hidden}
+  .hero h1{font-size:clamp(2rem,13vw,3.25rem);overflow-wrap:anywhere}
+  nav{width:100%;max-width:100%;overflow-x:hidden}
+
+  .toolbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;width:100%;max-width:100%;padding:7px 0;position:relative}
+  .toolbar>button{width:100%;min-width:0;padding:10px 7px;font-size:.78rem;white-space:normal;line-height:1.15}
+  .toolbar .userbar{grid-column:1/-1;width:100%;min-width:0;margin-left:0;display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:6px}
+  #userEmail{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  .weektitle{padding:15px 13px;width:100%;overflow:hidden}
+  .weektitle>div{min-width:0;max-width:100%}
+  .weektitle h2,.weektitle div{overflow-wrap:anywhere}
+  .day{overflow:hidden}
+  .day header{display:block;width:100%;padding:13px 12px}
+  .day header .date{width:100%;min-width:0}
+  .day-meta{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;width:100%;margin-top:10px;align-items:stretch}
+  .pill{display:flex;align-items:center;justify-content:center;width:100%;min-width:0;max-width:100%;padding:8px 6px;border-radius:10px;text-align:center;white-space:normal;overflow-wrap:anywhere;word-break:break-word;line-height:1.15}
+  .day-meta .start-session-btn{grid-column:1/-1;width:100%;max-width:100%;min-width:0;min-height:52px;margin:2px 0 0;border-radius:12px;font-size:1rem;flex:none}
+  .start-session-btn .start-label{display:inline}
+  .day-summary{padding:12px;grid-template-columns:1fr;width:100%}
+  .day-summary>*{min-width:0;overflow-wrap:anywhere}
+  details{width:auto;max-width:calc(100% - 16px);margin:8px;padding:10px;overflow:hidden}
+  summary{overflow-wrap:anywhere}
+  .warmup-item{grid-template-columns:1fr;width:100%;gap:5px}
+  .warmup-item>div{min-width:0;overflow-wrap:anywhere}
+  .feedback{padding:12px;grid-template-columns:1fr;width:100%}
+  .readiness-box{margin:10px 8px 14px;width:auto}
+  .scroll table{min-width:660px}
+
+  .modal-backdrop,.auth-screen{align-items:flex-start;justify-content:center;width:100%;max-width:100%;padding:8px;padding-top:max(8px,env(safe-area-inset-top));padding-right:max(8px,env(safe-area-inset-right));padding-bottom:max(8px,env(safe-area-inset-bottom));padding-left:max(8px,env(safe-area-inset-left));overflow-x:hidden;overflow-y:auto}
+  .modal-card,.auth-card,.precheck-card{width:100%;max-width:calc(100vw - 16px);margin:auto;padding:14px;border-radius:15px;overflow-x:hidden}
+  .modal-head{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:8px;width:100%}
+  .modal-head>div{min-width:0;overflow-wrap:anywhere}
+  .modal-head .secondary-button{max-width:100px;padding:9px 8px;white-space:normal}
+  .auth-actions{grid-template-columns:1fr}
+  .auth-actions .local{grid-column:auto}
+  .precheck-grid,.analytics-grid{grid-template-columns:1fr;width:100%}
+  .precheck-actions{grid-template-columns:1fr;width:100%}
+  .chart-controls{flex-direction:column;align-items:stretch;width:100%}
+  .chart-controls label{width:100%;min-width:0}
+  .chart-wrap{width:100%;max-width:100%;overflow:hidden}
+
+  .workout-overlay,.workout-top,.workout-main{width:100%;max-width:100%;overflow-x:hidden}
+  .workout-main{align-items:stretch}
+  .workout-stage,.workout-side{width:100%;max-width:100%;min-width:0;overflow-x:hidden}
+  .workout-stage>*,.workout-side>*{max-width:100%;min-width:0}
+  .prescription{width:100%;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .prescription div,.prescription strong{min-width:0;max-width:100%;overflow-wrap:anywhere}
+  .set-editor-grid{grid-template-columns:1fr;width:100%}
+  .set-history-item{grid-template-columns:1fr;width:100%;overflow-wrap:anywhere}
+  .range-control{align-items:stretch;flex-direction:column;width:100%}
+  .range-control select{width:100%;min-width:0}
+  .utility-actions{grid-template-columns:repeat(2,minmax(0,1fr));width:100%}
+  .utility-actions button{min-width:0;width:100%;white-space:normal;overflow-wrap:anywhere}
+  .workout-settings{width:100%}
+  .exercise-list button{width:100%;max-width:100%;min-width:0;overflow-wrap:anywhere}
+  .round-actions{width:100%;max-width:100%;grid-template-columns:repeat(4,minmax(0,1fr));overflow:hidden}
+  .round-action,.round-action span{min-width:0;max-width:100%;overflow-wrap:anywhere;word-break:break-word}
+  .round-action button{min-width:0}
+}
+
+@media(max-width:360px){
+  .wrap{padding:4px}
+  .hero{padding:18px 13px}
+  .day header{padding:11px 9px}
+  .day-meta{grid-template-columns:1fr}
+  .day-meta .start-session-btn{grid-column:1}
+  .modal-card,.auth-card,.precheck-card{max-width:calc(100vw - 8px);padding:11px}
+  .utility-actions{grid-template-columns:1fr}
+  .round-action button{width:50px;height:50px}
+  .round-action{font-size:.5rem}
+}
+
 </style>
 </head>
 <body>
@@ -174,7 +262,7 @@ function renderHero(){const p=PROGRAM.profile;$('heroMetrics').innerHTML=[['Poid
 function groupWeeks(){const groups=[];PROGRAM.sessions.forEach(s=>{let g=groups.find(x=>x.phase===s.phase);if(!g){g={phase:s.phase,sessions:[]};groups.push(g)}g.sessions.push(s)});return groups}
 function exerciseRow(s,e,i){const key=`done__${s.date}__${i}`;const tempo=e.tempoText||(e.tempo?e.tempo.join('-'):(e.mode==='iso'?'Isométrique':'—'));const rest=e.restText||restLabel(e.rest);return `<tr><td><strong>${escapeHtml(e.name)}</strong><small>${escapeHtml(e.note||'')}</small>${e.condition?`<small class="condition">Condition : ${escapeHtml(e.condition)}</small>`:''}</td><td>${escapeHtml(e.load)} • ${e.sets}×${escapeHtml(e.reps)}</td><td>${escapeHtml(tempo||'—')}</td><td>${escapeHtml(rest||'—')}</td><td>${escapeHtml(e.effort)}</td><td><input class="done-box" type="checkbox" data-save-key="${key}" onchange="scheduleSave()"></td></tr>`}
 function feedbackHtml(s){return `<div class="feedback"><label>Statut de la séance<select data-save-key="status__${s.date}" onchange="scheduleSave();applySessionClasses()"><option value="planned">Prévue</option><option value="completed">Terminée</option><option value="postponed">Reportée</option><option value="skipped">Non réalisée</option></select></label><label>Effort global<select data-save-key="effort__${s.date}" onchange="scheduleSave();updateDecision('${s.date}')"><option value="">Choisir</option><option value="easy">Facile</option><option value="clean">Difficile mais propre</option><option value="bad">Tempo / technique dégradés</option></select></label><label>Douleur genou pendant<input data-save-key="knee__${s.date}" type="number" min="0" max="10" placeholder="/10" oninput="scheduleSave();updateDecision('${s.date}')"></label><label>Douleur genou J+1<input data-save-key="knee_next__${s.date}" type="number" min="0" max="10" placeholder="/10" oninput="scheduleSave();updateDecision('${s.date}')"></label><label>Gonflement<select data-save-key="swelling__${s.date}" onchange="scheduleSave();updateDecision('${s.date}')"><option value="">Choisir</option><option value="no">Non</option><option value="light">Léger, disparu à J+1</option><option value="persist">Persistant à J+1</option></select></label><label>Grand rond<input data-save-key="teres__${s.date}" type="number" min="0" max="10" placeholder="/10" oninput="scheduleSave();updateDecision('${s.date}')"></label><label>Lombaires<input data-save-key="back__${s.date}" type="number" min="0" max="10" placeholder="/10" oninput="scheduleSave();updateDecision('${s.date}')"></label><label>Notes<textarea data-save-key="notes__${s.date}" placeholder="Technique, fatigue, douleur…" oninput="scheduleSave()"></textarea></label></div><div class="readiness-box"><strong>Décision automatique</strong><span id="decision__${s.date}" class="readiness-result">Renseigne la douleur et la réaction à J+1.</span></div>`}
-function renderProgram(){const root=$('programRoot'),nav=$('navSessions');let html='',navHtml='';groupWeeks().forEach((g,gi)=>{const id=`week-${gi+1}`;const first=g.sessions[0],last=g.sessions[g.sessions.length-1];html+=`<section class="week" id="${id}"><div class="weektitle"><div><span>${escapeHtml(g.phase)}</span><h2>${formatDate(first.date,{day:'numeric',month:'long'})} → ${formatDate(last.date,{day:'numeric',month:'long'})}</h2></div><div>${g.phase.includes('Affûtage')?'Volume réduit et fraîcheur':'Progression contrôlée'}</div></div>`;navHtml+=`<a href="#${id}">${escapeHtml(g.phase)}</a>`;g.sessions.forEach(s=>{const warm=s.warmup.map(w=>`<div class="warmup-item"><div><strong>${escapeHtml(w.name)}</strong><small>${escapeHtml(w.note)}</small></div><div>${w.sets>1?`${w.sets}×`:''}${escapeHtml(w.reps)}${w.seconds?` • ${formatSeconds(w.seconds)}`:''}${(w.restText||w.rest)?` • repos ${escapeHtml(w.restText||restLabel(w.rest))}`:''}</div></div>`).join('');html+=`<article class="day" id="${s.date}" data-date="${s.date}"><header><div class="date"><span>${formatDate(s.date,{weekday:'long'}).toUpperCase()}</span><h3>${formatDate(s.date,{day:'numeric',month:'long'})}</h3></div><div class="day-meta"><span class="pill">${escapeHtml(s.type)}</span><span class="pill">${escapeHtml(s.duration)}</span><span class="pill">${escapeHtml(s.intensity)}</span>${s.jumpCap?`<span class="pill">≤ ${s.jumpCap} sauts max</span>`:''}<button class="start-session-btn" aria-label="Démarrer la séance" onclick="startWorkout('${s.date}')">▶</button></div></header><div class="day-summary"><div><strong>${escapeHtml(s.title)}</strong><p>${escapeHtml(s.objective)}</p>${s.mainNote?`<p class="condition">${escapeHtml(s.mainNote)}</p>`:''}</div><div><strong>Phase</strong><p>${escapeHtml(s.phase)}</p></div></div><details><summary>Échauffement spécifique — pauses incluses</summary><div class="warmup-list">${warm}</div></details><div class="scroll"><table><thead><tr><th>Exercice</th><th>Charge / volume</th><th>Tempo</th><th>Repos</th><th>Effort</th><th>✓</th></tr></thead><tbody>${s.exercises.map((e,i)=>exerciseRow(s,e,i)).join('')}</tbody></table></div>${feedbackHtml(s)}</article>`});html+='</section>'});root.innerHTML=html;nav.innerHTML=navHtml;try{restoreFields(JSON.parse(localStorage.getItem(LOCAL_KEY)||'null')?.current_fields||{})}catch{}bindInputs()}
+function renderProgram(){const root=$('programRoot'),nav=$('navSessions');let html='',navHtml='';groupWeeks().forEach((g,gi)=>{const id=`week-${gi+1}`;const first=g.sessions[0],last=g.sessions[g.sessions.length-1];html+=`<section class="week" id="${id}"><div class="weektitle"><div><span>${escapeHtml(g.phase)}</span><h2>${formatDate(first.date,{day:'numeric',month:'long'})} → ${formatDate(last.date,{day:'numeric',month:'long'})}</h2></div><div>${g.phase.includes('Affûtage')?'Volume réduit et fraîcheur':'Progression contrôlée'}</div></div>`;navHtml+=`<a href="#${id}">${escapeHtml(g.phase)}</a>`;g.sessions.forEach(s=>{const warm=s.warmup.map(w=>`<div class="warmup-item"><div><strong>${escapeHtml(w.name)}</strong><small>${escapeHtml(w.note)}</small></div><div>${w.sets>1?`${w.sets}×`:''}${escapeHtml(w.reps)}${w.seconds?` • ${formatSeconds(w.seconds)}`:''}${(w.restText||w.rest)?` • repos ${escapeHtml(w.restText||restLabel(w.rest))}`:''}</div></div>`).join('');html+=`<article class="day" id="${s.date}" data-date="${s.date}"><header><div class="date"><span>${formatDate(s.date,{weekday:'long'}).toUpperCase()}</span><h3>${formatDate(s.date,{day:'numeric',month:'long'})}</h3></div><div class="day-meta"><span class="pill">${escapeHtml(s.type)}</span><span class="pill">${escapeHtml(s.duration)}</span><span class="pill">${escapeHtml(s.intensity)}</span>${s.jumpCap?`<span class="pill">≤ ${s.jumpCap} sauts max</span>`:''}<button class="start-session-btn" aria-label="Démarrer la séance" onclick="startWorkout('${s.date}')"><span aria-hidden="true">▶</span><span class="start-label">Démarrer la séance</span></button></div></header><div class="day-summary"><div><strong>${escapeHtml(s.title)}</strong><p>${escapeHtml(s.objective)}</p>${s.mainNote?`<p class="condition">${escapeHtml(s.mainNote)}</p>`:''}</div><div><strong>Phase</strong><p>${escapeHtml(s.phase)}</p></div></div><details><summary>Échauffement spécifique — pauses incluses</summary><div class="warmup-list">${warm}</div></details><div class="scroll"><table><thead><tr><th>Exercice</th><th>Charge / volume</th><th>Tempo</th><th>Repos</th><th>Effort</th><th>✓</th></tr></thead><tbody>${s.exercises.map((e,i)=>exerciseRow(s,e,i)).join('')}</tbody></table></div>${feedbackHtml(s)}</article>`});html+='</section>'});root.innerHTML=html;nav.innerHTML=navHtml;try{restoreFields(JSON.parse(localStorage.getItem(LOCAL_KEY)||'null')?.current_fields||{})}catch{}bindInputs()}
 function bindInputs(){fields().forEach(el=>{if(el.dataset.bound)return;el.dataset.bound='1';el.addEventListener(el.type==='text'||el.tagName==='TEXTAREA'?'input':'change',scheduleSave)})}
 function applySessionClasses(){const today=localDate();let nextFound=false;document.querySelectorAll('.day').forEach(card=>{const d=card.dataset.date,status=document.querySelector(`[data-save-key="status__${d}"]`)?.value||'planned';card.classList.toggle('past',d<today);card.classList.toggle('today',d===today);card.classList.remove('next');if(!nextFound&&d>today&&status!=='completed'){card.classList.add('next');nextFound=true}card.dataset.status=status})}
 function goToday(smooth=true){const today=localDate();let target=document.getElementById(today);if(!target)target=[...document.querySelectorAll('.day')].find(x=>x.dataset.date>=today)||document.querySelector('.day:last-of-type');if(target){target.scrollIntoView({behavior:smooth?'smooth':'auto',block:'start'});const det=target.querySelector('details');if(det)det.open=true}}
